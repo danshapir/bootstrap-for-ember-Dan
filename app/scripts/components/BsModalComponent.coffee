@@ -83,7 +83,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
         @$().one 'webkitTransitionEnd', (e) ->
             if current.get('manual') then current.destroy() else current.hide()
             return
-         @trigger 'closed'
+        @trigger 'closed'
         
 
     #Invoked automatically by ember when the view is destroyed, giving us a chance to perform cleanups
@@ -149,8 +149,8 @@ Bootstrap.ModalManager = Ember.Object.create(
             Ember.Object.create({title: cancelButtonTitle, clicked: cancelButtonEvent, type: cancelButtonType, dismiss: 'modal'})
         ]
         @open('confirm-modal', title || 'Confirmation required!', body, buttons, controller, fade, fullSizeButtons, targetObj)
-		
-	okModal: (controller, title, message, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null, targetObj = controller, fade = true, fullSizeButtons = false) ->
+
+	  okModal: (controller, title, message, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null, targetObj = controller, fade = true, fullSizeButtons = false) ->
         body = Ember.View.extend(
             template: Ember.Handlebars.compile(message || "Are you sure you would like to perform this action?")
         )
@@ -163,6 +163,13 @@ Bootstrap.ModalManager = Ember.Object.create(
         rootElement = options.rootElement or '.ember-application'
         instance = modalView.create options
         instance.appendTo rootElement
+
+    openManual: (name, title, content, footerButtons, controller, fade, fullSizeButtons, targetObj) ->
+      view = Ember.View.extend(
+        template: Ember.Handlebars.compile(content)
+        controller: controller
+      )
+      @open name, title, view, footerButtons, controller, fade, fullSizeButtons, targetObj
 
     open: (name, title, view, footerButtons, controller, fade , fullSizeButtons = false, targetObj = controller) ->
         cl = controller.container.lookup 'component-lookup:main'
