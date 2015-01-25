@@ -55,7 +55,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n    ");
+  data.buffer.push("\r\n    ");
   hashContexts = {'progress': depth0,'type': depth0};
   hashTypes = {'progress': "ID",'type': "ID"};
   options = {hash:{
@@ -63,18 +63,18 @@ function program1(depth0,data) {
     'type': ("type")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bs-progressbar'] || depth0['bs-progressbar']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bs-progressbar", options))));
-  data.buffer.push("\n");
+  data.buffer.push("\r\n");
   return buffer;
   }
 
 function program3(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n    ");
+  data.buffer.push("\r\n    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "yield", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n");
+  data.buffer.push("\r\n");
   return buffer;
   }
 
