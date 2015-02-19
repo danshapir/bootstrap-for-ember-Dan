@@ -35,14 +35,15 @@
     "./dist/js/bs-notifications.min.js",
     "./dist/js/bs-progressbar.min.js",
     "./dist/js/bs-wizard.min.js"
-    ],
+  ],
   "devDependencies": {
     "modernizr": "~2.6.2",
     "jquery": "~1.9.1",
-    "ember": "~1.9.0",
     "bootstrap": "3.0.0",
     "highlightjs": "~7.3.0",
-    "font-awesome": "~4.0.3"
+    "font-awesome": "~4.0.3",
+    "ember": "~1.10.0",
+    "handlebars": "2.0.0"
   },
   "license": "Apache2",
   "ignore": [
