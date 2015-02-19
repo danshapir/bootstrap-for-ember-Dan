@@ -1,10 +1,10 @@
 {
-  "name": "ember-addons.bootstrap_for_ember",
-  "version": "0.7.0",
-  "description": "Bootstrap for Ember.js",
+  "name": "bootstrap-for-ember-dan",
+  "version": "0.8.0",
+  "description": "Bootstrap for Ember.js fork by Dan",
   "homepage": "http://ember-addons.github.io/bootstrap-for-ember",
   "authors": [
-    "Asaf Shakarchi <asaf000@gmail.com>"
+    "Asaf Shakarchi <asaf000@gmail.com>, Dan Shapir"
   ],
   "keywords": [
     "bootstrap",
