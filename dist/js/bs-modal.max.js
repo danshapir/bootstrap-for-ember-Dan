@@ -307,118 +307,67 @@ Modal component.
 
 }).call(this);
 
-this["Ember"] = this["Ember"] || {};
-this["Ember"]["TEMPLATES"] = this["Ember"]["TEMPLATES"] || {};
-
-this["Ember"]["TEMPLATES"]["components/bs-modal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
-
-function program1(depth0,data) {
-  
-  var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\r\n                    <i ");
-  hashContexts = {'class': depth0};
-  hashTypes = {'class': "STRING"};
-  options = {hash:{
+Ember.TEMPLATES["components/bs-modal"] = Ember.Ember.TEMPLATES.template({"1":function(depth0,helpers,partials,data) {
+  var escapeExpression=this.escapeExpression, buffer = '';
+  data.buffer.push("                    <i ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {"name":"bind-attr","hash":{
     'class': ("titleIconClasses")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push("></i>\r\n                ");
+  },"hashTypes":{'class': "STRING"},"hashContexts":{'class': depth0},"types":[],"contexts":[],"data":data})));
+  data.buffer.push("></i>\r\n");
   return buffer;
-  }
-
-function program3(depth0,data) {
-  
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\r\n                ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "view.body", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\r\n            ");
+},"3":function(depth0,helpers,partials,data) {
+  var escapeExpression=this.escapeExpression, buffer = '';
+  data.buffer.push("                ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "view.body", {"name":"view","hash":{},"hashTypes":{},"hashContexts":{},"types":["ID"],"contexts":[depth0],"data":data})));
+  data.buffer.push("\r\n");
   return buffer;
-  }
-
-function program5(depth0,data) {
-  
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\r\n                ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "yield", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\r\n            ");
+},"5":function(depth0,helpers,partials,data) {
+  var stack1, buffer = '';
+  data.buffer.push("                ");
+  stack1 = helpers._triageMustache.call(depth0, "yield", {"name":"_triageMustache","hash":{},"hashTypes":{},"hashContexts":{},"types":["ID"],"contexts":[depth0],"data":data});
+  if (stack1 != null) { data.buffer.push(stack1); }
+  data.buffer.push("\r\n");
   return buffer;
-  }
-
-function program7(depth0,data) {
-  
-  var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\r\n                ");
-  hashContexts = {'content': depth0,'targetObjectBinding': depth0};
-  hashTypes = {'content': "ID",'targetObjectBinding': "STRING"};
-  options = {hash:{
-    'content': (""),
-    'targetObjectBinding': ("view.targetObject")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bs-button'] || depth0['bs-button']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bs-button", options))));
-  data.buffer.push("\r\n            ");
+},"7":function(depth0,helpers,partials,data) {
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = '';
+  data.buffer.push("                ");
+  data.buffer.push(escapeExpression(((helpers['bs-button'] || (depth0 && depth0['bs-button']) || helperMissing).call(depth0, {"name":"bs-button","hash":{
+    'targetObjectBinding': ("view.targetObject"),
+    'content': ("")
+  },"hashTypes":{'targetObjectBinding': "STRING",'content': "ID"},"hashContexts":{'targetObjectBinding': depth0,'content': depth0},"types":[],"contexts":[],"data":data}))));
+  data.buffer.push("\r\n");
   return buffer;
-  }
-
-function program9(depth0,data) {
-  
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\r\n                ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\r\n            ");
+},"9":function(depth0,helpers,partials,data) {
+  var escapeExpression=this.escapeExpression, buffer = '';
+  data.buffer.push("                ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "", {"name":"view","hash":{},"hashTypes":{},"hashContexts":{},"types":["ID"],"contexts":[depth0],"data":data})));
+  data.buffer.push("\r\n");
   return buffer;
-  }
-
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, escapeExpression=this.escapeExpression, buffer = '';
   data.buffer.push("<div class=\"modal-dialog\">\r\n    <div class=\"modal-content\">\r\n        <div class=\"modal-header\">\r\n            <button type=\"button\" ");
-  hashContexts = {'class': depth0};
-  hashTypes = {'class': "STRING"};
-  options = {hash:{
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {"name":"bind-attr","hash":{
     'class': (":close allowClose::hide")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\r\n            <h4 class=\"modal-title\">\r\n                ");
-  hashTypes = {};
-  hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "titleIconClasses", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\r\n                ");
-  hashContexts = {'unescaped': depth0};
-  hashTypes = {'unescaped': "STRING"};
-  stack2 = helpers._triageMustache.call(depth0, "title", {hash:{
+  },"hashTypes":{'class': "STRING"},"hashContexts":{'class': depth0},"types":[],"contexts":[],"data":data})));
+  data.buffer.push(" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\r\n            <h4 class=\"modal-title\">\r\n");
+  stack1 = helpers['if'].call(depth0, "titleIconClasses", {"name":"if","hash":{},"hashTypes":{},"hashContexts":{},"fn":this.program(1, data),"inverse":this.noop,"types":["ID"],"contexts":[depth0],"data":data});
+  if (stack1 != null) { data.buffer.push(stack1); }
+  data.buffer.push("                ");
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "title", {"name":"_triageMustache","hash":{
     'unescaped': ("true")
-  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\r\n            </h4>\r\n        </div>\r\n        <div class=\"modal-body\">\r\n            ");
-  hashTypes = {};
-  hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "body", {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\r\n        </div>\r\n        <div ");
-  hashContexts = {'class': depth0};
-  hashTypes = {'class': "STRING"};
-  options = {hash:{
+  },"hashTypes":{'unescaped': "STRING"},"hashContexts":{'unescaped': depth0},"types":["ID"],"contexts":[depth0],"data":data})));
+  data.buffer.push("\r\n            </h4>\r\n        </div>\r\n        <div class=\"modal-body\">\r\n");
+  stack1 = helpers['if'].call(depth0, "body", {"name":"if","hash":{},"hashTypes":{},"hashContexts":{},"fn":this.program(3, data),"inverse":this.program(5, data),"types":["ID"],"contexts":[depth0],"data":data});
+  if (stack1 != null) { data.buffer.push(stack1); }
+  data.buffer.push("        </div>\r\n        <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {"name":"bind-attr","hash":{
     'class': (":modal-footer fullSizeButtons:modal-footer-full")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">\r\n            ");
-  hashTypes = {};
-  hashContexts = {};
-  stack2 = helpers.each.call(depth0, "footerButtons", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\r\n            ");
-  hashTypes = {};
-  hashContexts = {};
-  stack2 = helpers.each.call(depth0, "footerViews", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\r\n        </div>\r\n    </div>\r\n</div>");
+  },"hashTypes":{'class': "STRING"},"hashContexts":{'class': depth0},"types":[],"contexts":[],"data":data})));
+  data.buffer.push(">\r\n");
+  stack1 = helpers.each.call(depth0, "footerButtons", {"name":"each","hash":{},"hashTypes":{},"hashContexts":{},"fn":this.program(7, data),"inverse":this.noop,"types":["ID"],"contexts":[depth0],"data":data});
+  if (stack1 != null) { data.buffer.push(stack1); }
+  stack1 = helpers.each.call(depth0, "footerViews", {"name":"each","hash":{},"hashTypes":{},"hashContexts":{},"fn":this.program(9, data),"inverse":this.noop,"types":["ID"],"contexts":[depth0],"data":data});
+  if (stack1 != null) { data.buffer.push(stack1); }
+  data.buffer.push("        </div>\r\n    </div>\r\n</div>");
   return buffer;
-  
-});
+},"useData":true});

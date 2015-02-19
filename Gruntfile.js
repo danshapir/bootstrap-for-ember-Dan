@@ -37,9 +37,9 @@ module.exports = function (grunt) {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
                 tasks: ['compass:server']
             },
-            ember_handlebars: {
+            emberTemplates: {
                 files: '<%= yeoman.app %>/templates/**/*.hbs',
-                tasks: ['ember_handlebars']
+                tasks: ['emberTemplates']
             },
             markdown: {
                 files: '<%= yeoman.app %>/templates/**/*.md',
@@ -309,7 +309,7 @@ module.exports = function (grunt) {
             server: [
                 'compass',
                 'markdown',
-                'ember_handlebars',
+                'emberTemplates',
                 'coffee:dist'
             ],
             test: [
@@ -318,21 +318,22 @@ module.exports = function (grunt) {
             dist: [
                 'coffee',
                 'markdown',
-                'ember_handlebars',
+                'emberTemplates',
                 'compass',
                 'imagemin',
                 'svgmin',
                 'htmlmin'
             ]
         },
-        ember_handlebars: {
-            compile_components: {
+        emberTemplates: {
+            compile: {
                 options: {
-                    processName: function(filename) {
-                        var fromComponent = filename.substring(filename.lastIndexOf('/components/')+1,filename.length);
+					templateNameFromFile: function(filename) {
+						var fromComponent = filename.substring(filename.lastIndexOf('/components/')+1,filename.length);
                         return fromComponent.substring(0,fromComponent.length-4);
-                    },
-                    namespace: "Ember.TEMPLATES"
+					},
+                    
+                    templateNamespace: "Ember.TEMPLATES"
                 },
                 files: {
                     '.tmp/scripts/bs-basic.js': [
@@ -351,18 +352,6 @@ module.exports = function (grunt) {
                         ],
                     '.tmp/scripts/bs-pills.js': '<%= yeoman.app %>/templates/components/bs-pills.hbs',
                     '.tmp/scripts/bs-modal.js': '<%= yeoman.app %>/templates/components/bs-modal.hbs'
-                }
-            },
-            compile_showcase: {
-                options: {
-                    processName: function(filename) {
-                        var fromShowcase = filename.substring(filename.lastIndexOf('/showcase/')+1,filename.length)
-                        return fromShowcase.substring(fromShowcase.indexOf('/')+1,fromShowcase.length-4);
-                    },
-                    namespace: "Ember.TEMPLATES"
-                },
-                files: {
-                    '.tmp/scripts/showcase-templates.js': '<%= yeoman.app %>/templates/showcase/**/*.hbs'
                 }
             }
         },
