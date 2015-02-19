@@ -44,7 +44,7 @@ Parent component of a progressbar component
 
 }).call(this);
 
-Ember.TEMPLATES["components/bs-progress"] = Ember.Ember.TEMPLATES.template({"1":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template({"1":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = '';
   data.buffer.push("    ");
   data.buffer.push(escapeExpression(((helpers['bs-progressbar'] || (depth0 && depth0['bs-progressbar']) || helperMissing).call(depth0, {"name":"bs-progressbar","hash":{
@@ -67,7 +67,7 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.Ember.TEMPLATES.template({"1":
   else { data.buffer.push(''); }
   },"useData":true});
 
-Ember.TEMPLATES["components/bs-progressbar"] = Ember.Ember.TEMPLATES.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-progressbar"] = Ember.HTMLBars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, buffer = '';
   data.buffer.push("<span class=\"sr-only\">");
   stack1 = helpers._triageMustache.call(depth0, "progress", {"name":"_triageMustache","hash":{},"hashTypes":{},"hashContexts":{},"types":["ID"],"contexts":[depth0],"data":data});

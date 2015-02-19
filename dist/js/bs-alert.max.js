@@ -128,7 +128,7 @@
 
 }).call(this);
 
-Ember.TEMPLATES["components/bs-alert"] = Ember.Ember.TEMPLATES.template({"1":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-alert"] = Ember.HTMLBars.template({"1":function(depth0,helpers,partials,data) {
   data.buffer.push("    <a class=\"close\" data-dismiss=\"alert\" href=\"#\">&times;</a>\r\n");
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, buffer = '';

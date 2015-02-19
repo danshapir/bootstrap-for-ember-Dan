@@ -307,7 +307,7 @@ Modal component.
 
 }).call(this);
 
-Ember.TEMPLATES["components/bs-modal"] = Ember.Ember.TEMPLATES.template({"1":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-modal"] = Ember.HTMLBars.template({"1":function(depth0,helpers,partials,data) {
   var escapeExpression=this.escapeExpression, buffer = '';
   data.buffer.push("                    <i ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {"name":"bind-attr","hash":{

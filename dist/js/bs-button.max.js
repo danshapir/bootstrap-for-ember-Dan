@@ -223,7 +223,7 @@ A collection of button groups
 
 }).call(this);
 
-Ember.TEMPLATES["components/bs-button"] = Ember.Ember.TEMPLATES.template({"1":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-button"] = Ember.HTMLBars.template({"1":function(depth0,helpers,partials,data) {
   var escapeExpression=this.escapeExpression, buffer = '';
   data.buffer.push("    <i ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {"name":"bind-attr","hash":{
@@ -241,7 +241,7 @@ Ember.TEMPLATES["components/bs-button"] = Ember.Ember.TEMPLATES.template({"1":fu
   if (stack1 != null) { data.buffer.push(stack1); }
   return buffer;
 },"useData":true});
-Ember.TEMPLATES["components/bs-btn-toolbar"] = Ember.Ember.TEMPLATES.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-btn-toolbar"] = Ember.HTMLBars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1;
   stack1 = helpers._triageMustache.call(depth0, "yield", {"name":"_triageMustache","hash":{},"hashTypes":{},"hashContexts":{},"types":["ID"],"contexts":[depth0],"data":data});
   if (stack1 != null) { data.buffer.push(stack1); }

@@ -43,7 +43,7 @@
       }
     },
     click: function(event) {
-      return this.sendAction('clicked');
+      return this.sendAction('clicked', event);
     },
     collapsibleBodyId: (function() {
       return "" + (this.get('elementId')) + "_body";
@@ -57,7 +57,7 @@
 
 }).call(this);
 
-Ember.TEMPLATES["components/bs-page-header"] = Ember.Ember.TEMPLATES.template({"1":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-page-header"] = Ember.HTMLBars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, buffer = '';
   data.buffer.push("        <small>");
   stack1 = helpers._triageMustache.call(depth0, "sub", {"name":"_triageMustache","hash":{},"hashTypes":{},"hashContexts":{},"types":["ID"],"contexts":[depth0],"data":data});
@@ -76,14 +76,14 @@ Ember.TEMPLATES["components/bs-page-header"] = Ember.Ember.TEMPLATES.template({"
   return buffer;
 },"useData":true});
 
-Ember.TEMPLATES["components/bs-well"] = Ember.Ember.TEMPLATES.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-well"] = Ember.HTMLBars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1;
   stack1 = helpers._triageMustache.call(depth0, "yield", {"name":"_triageMustache","hash":{},"hashTypes":{},"hashContexts":{},"types":["ID"],"contexts":[depth0],"data":data});
   if (stack1 != null) { data.buffer.push(stack1); }
   else { data.buffer.push(''); }
   },"useData":true});
 
-Ember.TEMPLATES["components/bs-panel"] = Ember.Ember.TEMPLATES.template({"1":function(depth0,helpers,partials,data) {
+Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, buffer = '';
   data.buffer.push("    <div class=\"panel-heading\">\r\n");
   stack1 = helpers['if'].call(depth0, "collapsible", {"name":"if","hash":{},"hashTypes":{},"hashContexts":{},"fn":this.program(2, data),"inverse":this.program(4, data),"types":["ID"],"contexts":[depth0],"data":data});
