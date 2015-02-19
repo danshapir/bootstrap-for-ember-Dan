@@ -37,9 +37,9 @@ module.exports = function (grunt) {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
                 tasks: ['compass:server']
             },
-            emberTemplates: {
+            ember_templates: {
                 files: '<%= yeoman.app %>/templates/**/*.hbs',
-                tasks: ['emberTemplates']
+                tasks: ['ember_templates']
             },
             markdown: {
                 files: '<%= yeoman.app %>/templates/**/*.md',
@@ -309,7 +309,7 @@ module.exports = function (grunt) {
             server: [
                 'compass',
                 'markdown',
-                'emberTemplates',
+                'ember_templates',
                 'coffee:dist'
             ],
             test: [
@@ -318,24 +318,23 @@ module.exports = function (grunt) {
             dist: [
                 'coffee',
                 'markdown',
-                'emberTemplates',
+                'ember_templates',
                 'compass',
                 'imagemin',
                 'svgmin',
                 'htmlmin'
             ]
         },
-        emberTemplates: {
-            compile: {
+        ember_templates: {
+            compile_components: {
                 options: {
-					templateNameFromFile: function(filename) {
-						var fromComponent = filename.substring(filename.lastIndexOf('/components/')+1,filename.length);
-                        return fromComponent.substring(0,fromComponent.length-4);
-					},
-                    
-                    templateNamespace: "Ember.TEMPLATES"
+                    templateName: function(filename) {
+                        return filename.substring(filename.lastIndexOf('/components/')+1,filename.length);
+                    },
+                    namespace: "Ember.TEMPLATES"
                 },
                 files: {
+                    '.tmp/scripts/bs-core.js': '<%= yeoman.app %>/templates/views/item-pane.hbs',
                     '.tmp/scripts/bs-basic.js': [
                         '<%= yeoman.app %>/templates/components/bs-page-header.hbs',
                         '<%= yeoman.app %>/templates/components/bs-well.hbs',
@@ -352,6 +351,17 @@ module.exports = function (grunt) {
                         ],
                     '.tmp/scripts/bs-pills.js': '<%= yeoman.app %>/templates/components/bs-pills.hbs',
                     '.tmp/scripts/bs-modal.js': '<%= yeoman.app %>/templates/components/bs-modal.hbs'
+                }
+            },
+            compile_showcase: {
+                options: {
+                    templateName: function(filename) {
+                        return filename.substring(filename.lastIndexOf('/showcase/')+1,filename.length).replace('showcase/', '');
+                    },
+                    namespace: "Ember.TEMPLATES"
+                },
+                files: {
+                    '.tmp/scripts/showcase-templates.js': '<%= yeoman.app %>/templates/showcase/**/*.hbs'
                 }
             }
         },

@@ -1,3 +1,34 @@
+# Please use our CLI-ADDONS instead
+
+We rewrote almost all components from scratch and packed them as Ember-Addons,
+Please avoid using this project and use the separated components instead:
+
+- [x] [Idx Forms Components](https://github.com/indexiatech/ember-forms)
+- [x] [Idx Button Component](https://github.com/indexiatech/ember-idx-button)
+- [x] [Idx Modal Component](https://github.com/indexiatech/ember-idx-modal)
+- [x] [Idx Tree Component](https://github.com/indexiatech/ember-idx-tree)
+- [x] [Idx Charts Component](https://github.com/indexiatech/ember-idx-charts)
+- [x] [Idx Tabs Component](https://github.com/indexiatech/ember-idx-tabs)
+- [x] [Idx Tour Component](https://github.com/indexiatech/ember-idx-tour)
+- [x] [Idx WYSIWYG Component](https://github.com/indexiatech/ember-idx-wysiwyg)
+- [x] [Idx Accordion Component](https://github.com/indexiatech/ember-idx-accordion)
+- [x] [Idx List Component](https://github.com/indexiatech/ember-idx-list)
+
+If you find a useful component in this project that does not exist yet as an addon you can post an issue [here](https://github.com/indexiatech/ember-components).
+
+#### This project is deprecated, why?
+
+While this project is currently used in many production applications, we have decided to discontinue the development for the development of our new rich components available here: http://indexiatech.github.io/ember-components
+
+There are several advantaged for using [Indexia Ember Components](http://indexiatech.github.io/ember-components), some of them are:
+
+* Components were refactored and designed much better.
+* Components are Ember-Cli addons for easy integration.
+* Components are splitted into addons in order to avoid blowing up the app size with unneccessary bits.
+
+For more info see: http://indexiatech.github.io/ember-components/#/overview
+
+
 # Bootstrap for Ember
 
 _Bootstrap for Ember.js_ is a collection of UI components based on Twitter Bootstrap *v3* for Ember.js
@@ -13,9 +44,9 @@ using Bootstrap as is, see showcase!
 
 > A picture is worth a thousand words
 
-### [See ShowCase](http://ember-addons.github.io/bootstrap-for-ember)
+#### Bootstrap for Ember [ShowCase](http://ember-addons.github.io/bootstrap-for-ember)
 
-### Also visit our new [Ember Forms](http://ember-addons.github.io/ember-forms/#/overview) project
+#### For forms components, take a look at [Ember Forms](http://indexiatech.github.io/ember-forms) project
 
 ## Why?
 
