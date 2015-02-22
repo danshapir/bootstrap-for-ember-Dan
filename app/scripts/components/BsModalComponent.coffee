@@ -3,7 +3,7 @@ Modal component.
 ###
 
 Bootstrap.adjustModalMaxHeightAndPosition = ->
-  Ember.$(".modal").each ->
+  Ember.$(".modal.vertical").each ->
     Ember.$(this).show()  if Ember.$(this).hasClass("in") is false
     contentHeight = Ember.$(window).height() - 60
     headerHeight = Ember.$(this).find(".modal-header").outerHeight() or 2
@@ -26,7 +26,7 @@ Bootstrap.adjustModalMaxHeightAndPosition = ->
 Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     layoutName: 'components/bs-modal'
     classNames: ['modal']
-    classNameBindings: ['fade', 'isVis:in']
+    classNameBindings: ['fade', 'isVis:in', 'vertical:vertical']
     attributeBindings: ['role', 'aria-labelledby', 'isAriaHidden:aria-hidden', "ariaLabelledBy:aria-labelledby"]
     isAriaHidden: (->
         "#{@get('isVisible')}"
@@ -43,6 +43,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     isVis: false
     fullSizeButtons: false
     fade: true
+    vertical: false
     
     didInsertElement: ->
         @._super()
@@ -52,7 +53,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
         Ember.assert("Modal name is required for modal view #{@get('elementId')}", @get('name'))
         name?= @get('elementId')
         Bootstrap.ModalManager.add(name, @)
-
+        Bootstrap.adjustModalMaxHeightAndPosition()
         if @manual
             @show()
 
