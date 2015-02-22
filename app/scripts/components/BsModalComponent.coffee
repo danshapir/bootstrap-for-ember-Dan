@@ -1,6 +1,29 @@
 ###
 Modal component.
 ###
+
+Bootstrap.adjustModalMaxHeightAndPosition = ->
+  console.log "adju"
+  Ember.$(".modal").each ->
+    Ember.$(this).show()  if Ember.$(this).hasClass("in") is false
+    contentHeight = Ember.$(window).height() - 60
+    headerHeight = Ember.$(this).find(".modal-header").outerHeight() or 2
+    footerHeight = Ember.$(this).find(".modal-footer").outerHeight() or 2
+    Ember.$(this).find(".modal-content").css "max-height": ->
+      contentHeight
+
+    Ember.$(this).find(".modal-body").css "max-height": ->
+      contentHeight - (headerHeight + footerHeight)
+
+    Ember.$(this).find(".modal-dialog").addClass("modal-dialog-center").css
+      "margin-top": ->
+        -(Ember.$(this).outerHeight() / 2)
+
+      "margin-left": ->
+        -(Ember.$(this).outerWidth() / 2)
+
+    Ember.$(this).hide()  if Ember.$(this).hasClass("in") is false
+
 Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     layoutName: 'components/bs-modal'
     classNames: ['modal']
@@ -140,7 +163,7 @@ Bootstrap.ModalManager = Ember.Object.create(
     toggle: (name) ->
         @get(name).toggle()
 
-    confirm: (controller, title, message, confirmButtonTitle = "Confirm", confirmButtonEvent = "modalConfirmed",confirmButtonType = null, cancelButtonTitle = "Cancel", cancelButtonEvent = "modalCanceled",cancelButtonType = null, targetObj = controller, fade = true, fullSizeButtons = false) ->
+    confirm: (controller, title, message, options, confirmButtonTitle = "Confirm", confirmButtonEvent = "modalConfirmed",confirmButtonType = null, cancelButtonTitle = "Cancel", cancelButtonEvent = "modalCanceled",cancelButtonType = null) ->
         body = Ember.View.extend(
             template: Ember.Handlebars.compile(message || "Are you sure you would like to perform this action?")
         )
@@ -148,64 +171,72 @@ Bootstrap.ModalManager = Ember.Object.create(
             Ember.Object.create({title: confirmButtonTitle, clicked: confirmButtonEvent, type: confirmButtonType, dismiss: 'modal'})
             Ember.Object.create({title: cancelButtonTitle, clicked: cancelButtonEvent, type: cancelButtonType, dismiss: 'modal'})
         ]
-        @open('confirm-modal', title || 'Confirmation required!', body, buttons, controller, fade, fullSizeButtons, targetObj)
+        @open('confirm-modal', title || 'Confirmation required!', body, buttons, controller, options)
 
-	  okModal: (controller, title, message, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null, targetObj = controller, fade = true, fullSizeButtons = false) ->
+	  okModal: (controller, title, message, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null, options) ->
         body = Ember.View.extend(
             template: Ember.Handlebars.compile(message || "Are you sure you would like to perform this action?")
         )
         buttons = [
             Ember.Object.create({title: okButtonTitle, clicked:okButtonEvent, type: okButtonType, dismiss: 'modal'})
         ]
-        @open('ok-modal', title || 'Confirmation required!', body, buttons, controller, fade, fullSizeButtons, targetObj)
+        @open('ok-modal', title || 'Confirmation required!', body, buttons, controller, options)
 
     openModal: (modalView, options = {}) ->
         rootElement = options.rootElement or '.ember-application'
         instance = modalView.create options
         instance.appendTo rootElement
 
-    openManual: (name, title, content, footerButtons, controller, fade, fullSizeButtons, targetObj) ->
+    openManual: (name, title, content, footerButtons, controller, options) ->
       view = Ember.View.extend(
         template: Ember.Handlebars.compile(content)
         controller: controller
       )
-      @open name, title, view, footerButtons, controller, fade, fullSizeButtons, targetObj
+      @open name, title, view, footerButtons, controller, options
 
-    open: (name, title, view, footerButtons, controller, fade , fullSizeButtons = false, targetObj = controller) ->
-        cl = controller.container.lookup 'component-lookup:main'
-        modalComponent = cl.lookupFactory('bs-modal', controller.get('container')).create()
+    open: (name, title, view, footerButtons, controller, options) ->
+        cl = undefined
+		modalComponent = undefined
+		template = undefined
+		options = {}  unless options?
+		options.fade = @get("fade")  unless options.fade?
+		options.fullSizeButtons = @get("fullSizeButtons")  unless options.fullSizeButtons?
+		options.targetObj = controller  unless options.targetObj?
+		options.vertical = @get("vertical")  unless options.vertical?
+		cl = controller.container.lookup("component-lookup:main")
+		modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create()
+		modalComponent.setProperties
+		name: name
+		title: title
+		manual: true
+		footerButtons: footerButtons
+		targetObject: options.targetObj
+		fade: options.fade
+		fullSizeButtons: options.fullSizeButtons
+		vertical: options.vertical
 
-        modalComponent.setProperties(
-            name: name
-            title: title
-            manual: true
-            footerButtons: footerButtons
-            targetObject: targetObj
-            fade: fade
-            fullSizeButtons: fullSizeButtons
-        )
+		if Ember.typeOf(view) is "string"
+			template = controller.container.lookup("template:" + view)
+			Ember.assert "Template " + view + " was specified for Modal but template could not be found.", template
+			if template
+				modalComponent.setProperties body: Ember.View.extend(
+					template: template
+					controller: controller
+				)
+		else if Ember.typeOf(view) is "class"
+			modalComponent.setProperties
+				body: view
+				controller: controller
 
-        if Ember.typeOf(view) is 'string'
-            template = controller.container.lookup("template:#{view}")
-            Ember.assert("Template #{view} was specified for Modal but template could not be found.", template)
-            if template
-                modalComponent.setProperties(
-                    body: Ember.View.extend(
-                        template: template,
-                        controller: controller
-                    )
-                )
-        else if Ember.typeOf(view) is 'class'
-            modalComponent.setProperties(
-                body: view,
-                controller: controller
-            )
-
-        modalComponent.appendTo(controller.namespace.rootElement)
+		modalComponent.appendTo controller.namespace.rootElement
+	fade: true
+	fullSizeButtons: false
+	vertical: false
 )
 
 
 Ember.Application.initializer
     name: 'bs-modal'
     initialize: (container, application) ->
-        container.register 'component:bs-modal', Bootstrap.BsModalComponent
+		Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger "resize"  if Ember.$(window).height() >= 320
+		container.register "component:bs-modal", Bootstrap.BsModalComponent
