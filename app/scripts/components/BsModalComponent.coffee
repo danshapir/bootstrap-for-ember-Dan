@@ -3,7 +3,6 @@ Modal component.
 ###
 
 Bootstrap.adjustModalMaxHeightAndPosition = ->
-  console.log "adju"
   Ember.$(".modal").each ->
     Ember.$(this).show()  if Ember.$(this).hasClass("in") is false
     contentHeight = Ember.$(window).height() - 60
@@ -206,14 +205,14 @@ Bootstrap.ModalManager = Ember.Object.create(
       cl = controller.container.lookup("component-lookup:main")
       modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create()
       modalComponent.setProperties
-      name: name
-      title: title
-      manual: true
-      footerButtons: footerButtons
-      targetObject: options.targetObj
-      fade: options.fade
-      fullSizeButtons: options.fullSizeButtons
-      vertical: options.vertical
+        name: name
+        title: title
+        manual: true
+        footerButtons: footerButtons
+        targetObject: options.targetObj
+        fade: options.fade
+        fullSizeButtons: options.fullSizeButtons
+        vertical: options.vertical
       
       if Ember.typeOf(view) is "string"
       	template = controller.container.lookup("template:" + view)

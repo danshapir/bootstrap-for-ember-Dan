@@ -5,7 +5,6 @@ Modal component.
 
 (function() {
   Bootstrap.adjustModalMaxHeightAndPosition = function() {
-    console.log("adju");
     return Ember.$(".modal").each(function() {
       var contentHeight, footerHeight, headerHeight;
       if (Ember.$(this).hasClass("in") === false) {
@@ -295,8 +294,7 @@ Modal component.
       }
       cl = controller.container.lookup("component-lookup:main");
       modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create();
-      modalComponent.setProperties;
-      ({
+      modalComponent.setProperties({
         name: name,
         title: title,
         manual: true,
