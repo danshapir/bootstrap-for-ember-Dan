@@ -4,8 +4,6 @@ Modal component.
 
 
 (function() {
-  var cl, modalComponent, options, template;
-
   Bootstrap.adjustModalMaxHeightAndPosition = function() {
     console.log("adju");
     return Ember.$(".modal").each(function() {
@@ -233,8 +231,7 @@ Modal component.
         })
       ];
       return this.open('confirm-modal', title || 'Confirmation required!', body, buttons, controller, options);
-    }
-  }, {
+    },
     okModal: function(controller, title, message, okButtonTitle, okButtonEvent, okButtonType, options) {
       var body, buttons;
       if (okButtonTitle == null) {
@@ -277,27 +274,57 @@ Modal component.
       return this.open(name, title, view, footerButtons, controller, options);
     },
     open: function(name, title, view, footerButtons, controller, options) {
-      var cl;
-      return cl = void 0;
-    }
-  }, modalComponent = void 0, template = void 0, typeof options === "undefined" || options === null ? options = {} : void 0, options.fade == null ? options.fade = this.get("fade") : void 0, options.fullSizeButtons == null ? options.fullSizeButtons = this.get("fullSizeButtons") : void 0, options.targetObj == null ? options.targetObj = controller : void 0, options.vertical == null ? options.vertical = this.get("vertical") : void 0, cl = controller.container.lookup("component-lookup:main"), modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create(), modalComponent.setProperties, {
-    name: name,
-    title: title,
-    manual: true,
-    footerButtons: footerButtons,
-    targetObject: options.targetObj,
-    fade: options.fade,
-    fullSizeButtons: options.fullSizeButtons,
-    vertical: options.vertical
-  }, Ember.typeOf(view) === "string" ? (template = controller.container.lookup("template:" + view), Ember.assert("Template " + view + " was specified for Modal but template could not be found.", template), template ? modalComponent.setProperties({
-    body: Ember.View.extend({
-      template: template,
-      controller: controller
-    })
-  }) : void 0) : Ember.typeOf(view) === "class" ? modalComponent.setProperties({
-    body: view,
-    controller: controller
-  }) : void 0, modalComponent.appendTo(controller.namespace.rootElement), {
+      var cl, modalComponent, template;
+      cl = void 0;
+      modalComponent = void 0;
+      template = void 0;
+      if (options == null) {
+        options = {};
+      }
+      if (options.fade == null) {
+        options.fade = this.get("fade");
+      }
+      if (options.fullSizeButtons == null) {
+        options.fullSizeButtons = this.get("fullSizeButtons");
+      }
+      if (options.targetObj == null) {
+        options.targetObj = controller;
+      }
+      if (options.vertical == null) {
+        options.vertical = this.get("vertical");
+      }
+      cl = controller.container.lookup("component-lookup:main");
+      modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create();
+      modalComponent.setProperties;
+      ({
+        name: name,
+        title: title,
+        manual: true,
+        footerButtons: footerButtons,
+        targetObject: options.targetObj,
+        fade: options.fade,
+        fullSizeButtons: options.fullSizeButtons,
+        vertical: options.vertical
+      });
+      if (Ember.typeOf(view) === "string") {
+        template = controller.container.lookup("template:" + view);
+        Ember.assert("Template " + view + " was specified for Modal but template could not be found.", template);
+        if (template) {
+          modalComponent.setProperties({
+            body: Ember.View.extend({
+              template: template,
+              controller: controller
+            })
+          });
+        }
+      } else if (Ember.typeOf(view) === "class") {
+        modalComponent.setProperties({
+          body: view,
+          controller: controller
+        });
+      }
+      return modalComponent.appendTo(controller.namespace.rootElement);
+    },
     fade: true,
     fullSizeButtons: false,
     vertical: false

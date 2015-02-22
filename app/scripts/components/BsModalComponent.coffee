@@ -173,7 +173,7 @@ Bootstrap.ModalManager = Ember.Object.create(
         ]
         @open('confirm-modal', title || 'Confirmation required!', body, buttons, controller, options)
 
-	  okModal: (controller, title, message, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null, options) ->
+    okModal: (controller, title, message, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null, options) ->
         body = Ember.View.extend(
             template: Ember.Handlebars.compile(message || "Are you sure you would like to perform this action?")
         )
@@ -195,43 +195,43 @@ Bootstrap.ModalManager = Ember.Object.create(
       @open name, title, view, footerButtons, controller, options
 
     open: (name, title, view, footerButtons, controller, options) ->
-        cl = undefined
-		modalComponent = undefined
-		template = undefined
-		options = {}  unless options?
-		options.fade = @get("fade")  unless options.fade?
-		options.fullSizeButtons = @get("fullSizeButtons")  unless options.fullSizeButtons?
-		options.targetObj = controller  unless options.targetObj?
-		options.vertical = @get("vertical")  unless options.vertical?
-		cl = controller.container.lookup("component-lookup:main")
-		modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create()
-		modalComponent.setProperties
-		name: name
-		title: title
-		manual: true
-		footerButtons: footerButtons
-		targetObject: options.targetObj
-		fade: options.fade
-		fullSizeButtons: options.fullSizeButtons
-		vertical: options.vertical
-
-		if Ember.typeOf(view) is "string"
-			template = controller.container.lookup("template:" + view)
-			Ember.assert "Template " + view + " was specified for Modal but template could not be found.", template
-			if template
-				modalComponent.setProperties body: Ember.View.extend(
-					template: template
-					controller: controller
-				)
-		else if Ember.typeOf(view) is "class"
-			modalComponent.setProperties
-				body: view
-				controller: controller
-
-		modalComponent.appendTo controller.namespace.rootElement
-	fade: true
-	fullSizeButtons: false
-	vertical: false
+      cl = undefined
+      modalComponent = undefined
+      template = undefined
+      options = {}  unless options?
+      options.fade = @get("fade")  unless options.fade?
+      options.fullSizeButtons = @get("fullSizeButtons")  unless options.fullSizeButtons?
+      options.targetObj = controller  unless options.targetObj?
+      options.vertical = @get("vertical")  unless options.vertical?
+      cl = controller.container.lookup("component-lookup:main")
+      modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create()
+      modalComponent.setProperties
+      name: name
+      title: title
+      manual: true
+      footerButtons: footerButtons
+      targetObject: options.targetObj
+      fade: options.fade
+      fullSizeButtons: options.fullSizeButtons
+      vertical: options.vertical
+      
+      if Ember.typeOf(view) is "string"
+      	template = controller.container.lookup("template:" + view)
+      	Ember.assert "Template " + view + " was specified for Modal but template could not be found.", template
+      	if template
+      		modalComponent.setProperties body: Ember.View.extend(
+      			template: template
+      			controller: controller
+      		)
+      else if Ember.typeOf(view) is "class"
+      	modalComponent.setProperties
+      		body: view
+      		controller: controller
+      
+      modalComponent.appendTo controller.namespace.rootElement
+    fade: true
+    fullSizeButtons: false
+    vertical: false
 )
 
 
