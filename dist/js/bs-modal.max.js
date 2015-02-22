@@ -332,14 +332,13 @@ Modal component.
 
   Ember.Application.initializer({
     name: 'bs-modal',
-    initialize: function(container, application) {}
+    initialize: function(container, application) {
+      if (Ember.$(window).height() >= 320) {
+        Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger("resize");
+      }
+      return container.register("component:bs-modal", Bootstrap.BsModalComponent);
+    }
   });
-
-  if (Ember.$(window).height() >= 320) {
-    Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger("resize");
-  }
-
-  container.register("component:bs-modal", Bootstrap.BsModalComponent);
 
 }).call(this);
 

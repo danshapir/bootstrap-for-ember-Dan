@@ -238,5 +238,5 @@ Bootstrap.ModalManager = Ember.Object.create(
 Ember.Application.initializer
     name: 'bs-modal'
     initialize: (container, application) ->
-		Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger "resize"  if Ember.$(window).height() >= 320
-		container.register "component:bs-modal", Bootstrap.BsModalComponent
+      Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger "resize"  if Ember.$(window).height() >= 320
+      container.register "component:bs-modal", Bootstrap.BsModalComponent
