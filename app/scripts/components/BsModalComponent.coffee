@@ -2,54 +2,54 @@
 Modal component.
 ###
 
-Bootstrap.ResizeMixin = Ember.Mixin.create(
-  resizing: false
-  resizeDelay: 200
-  findResizableParentView: (parent) ->
-    if Ember.isNone(parent)
-      return null
-    if parent and !parent.has('resize')
-      return @findResizableParentView(parent.get('parentView'))
-    parent
-  _setupResizeHandlers: (->
-    resizeHandler = @get('_handleResize')
-    parent = @findResizableParentView(@get('parentView'))
-    if Ember.isNone(parent)
-      resizeHandler = Ember.$.proxy(resizeHandler, this)
-      # element doesn't have resizable views, so bind to the window
-      Ember.$(window).on 'resize.' + @elementId, resizeHandler
-      @_resizeHandler = resizeHandler
-    else
-      parent.on 'resize', this, resizeHandler
-    return
-  ).on('didInsertElement')
-  _removeResizeHandlers: (->
-    if @_resizeHandler
-      Ember.$(window).off 'resize.' + @elementId, @_resizeHandler
-    return
-  ).on('willDestroyElement')
-  _handleResize: (event, promise) ->
-    if Ember.isNone(promise)
-      promise = Ember.RSVP.resolve(null, 'Resize handler')
-    if !@get('resizing')
-      @set 'resizing', true
-      if @has('resizeStart')
-        @trigger 'resizeStart', event
-    if @has('resize')
-      @trigger 'resize', event, promise
-    Ember.run.debounce this, @_endResize, event, @get('resizeDelay')
-    return
-  _endResize: (event) ->
-    @set 'resizing', false
-    if @has('resizeEnd')
-      @trigger 'resizeEnd', event
-    return
-)
+#Bootstrap.ResizeMixin = Ember.Mixin.create(
+#  resizing: false
+#  resizeDelay: 200
+#  findResizableParentView: (parent) ->
+#    if Ember.isNone(parent)
+#      return null
+#    if parent and !parent.has('resize')
+#      return @findResizableParentView(parent.get('parentView'))
+#    parent
+#  _setupResizeHandlers: (->
+#    resizeHandler = @get('_handleResize')
+#    parent = @findResizableParentView(@get('parentView'))
+#    if Ember.isNone(parent)
+#      resizeHandler = Ember.$.proxy(resizeHandler, this)
+#      # element doesn't have resizable views, so bind to the window
+#      Ember.$(window).on 'resize.' + @elementId, resizeHandler
+#      @_resizeHandler = resizeHandler
+#    else
+#      parent.on 'resize', this, resizeHandler
+#    return
+#  ).on('didInsertElement')
+#  _removeResizeHandlers: (->
+#    if @_resizeHandler
+#      Ember.$(window).off 'resize.' + @elementId, @_resizeHandler
+#    return
+#  ).on('willDestroyElement')
+#  _handleResize: (event, promise) ->
+#    if Ember.isNone(promise)
+#      promise = Ember.RSVP.resolve(null, 'Resize handler')
+#    if !@get('resizing')
+#      @set 'resizing', true
+#      if @has('resizeStart')
+#        @trigger 'resizeStart', event
+#    if @has('resize')
+#      @trigger 'resize', event, promise
+#    Ember.run.debounce this, @_endResize, event, @get('resizeDelay')
+#    return
+#  _endResize: (event) ->
+#    @set 'resizing', false
+#    if @has('resizeEnd')
+#      @trigger 'resizeEnd', event
+#    return
+#)
 
-Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, Bootstrap.ResizeMixin,
+Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     layoutName: 'components/bs-modal'
     classNames: ['modal']
-    classNameBindings: ['fade', 'isVis:in', 'vertical:vertical']
+    classNameBindings: ['fade', 'isVis:in', 'vertical:modal-dialog-center']
     attributeBindings: ['role', 'aria-labelledby', 'isAriaHidden:aria-hidden', "ariaLabelledBy:aria-labelledby"]
     isAriaHidden: (->
         "#{@get('isVisible')}"
@@ -78,29 +78,29 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, Bootstrap.Res
     fade: true
     vertical: false
     zindex: 1000
-
-    onResize: (->
-      # do what you want when resize is triggered
-      if @get('vertical')
-        return Ember.run.scheduleOnce('afterRender', this, ->
-          contentHeight = undefined
-          footerHeight = undefined
-          headerHeight = undefined
-          contentHeight = Ember.$(window).height() - 60
-          headerHeight = @$().find('.modal-header').outerHeight() or 2
-          footerHeight = @$().find('.modal-footer').outerHeight() or 2
-          @$().find('.modal-content').css 'max-height': ->
-            contentHeight
-          @$().find('.modal-body').css 'max-height': ->
-            contentHeight - headerHeight + footerHeight
-          @$().find('.modal-dialog').addClass('modal-dialog-center').css
-            'margin-top': ->
-              -(Ember.$(this).outerHeight() / 2)
-            'margin-left': ->
-              -(Ember.$(this).outerWidth() / 2)
-        )
-      return
-    ).on 'resize'
+#
+#    onResize: (->
+#      # do what you want when resize is triggered
+#      if @get('vertical')
+#        return Ember.run.scheduleOnce('afterRender', this, ->
+#          contentHeight = undefined
+#          footerHeight = undefined
+#          headerHeight = undefined
+#          contentHeight = Ember.$(window).height() - 60
+#          headerHeight = @$().find('.modal-header').outerHeight() or 2
+#          footerHeight = @$().find('.modal-footer').outerHeight() or 2
+#          @$().find('.modal-content').css 'max-height': ->
+#            contentHeight
+#          @$().find('.modal-body').css 'max-height': ->
+#            contentHeight - headerHeight + footerHeight
+#          @$().find('.modal-dialog').addClass('modal-dialog-center').css
+#            'margin-top': ->
+#              -(Ember.$(this).outerHeight() / 2)
+#            'margin-left': ->
+#              -(Ember.$(this).outerWidth() / 2)
+#        )
+#      return
+#    ).on 'resize'
 
     didInsertElement: ->
         @._super()
@@ -110,7 +110,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, Bootstrap.Res
         Ember.assert("Modal name is required for modal view #{@get('elementId')}", @get('name'))
         name?= @get('elementId')
         Bootstrap.ModalManager.add(name, @)
-        @onResize()
+#        @onResize()
         @dialogStyle()
         if @manual
             @show()

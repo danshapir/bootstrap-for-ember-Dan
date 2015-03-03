@@ -4,62 +4,10 @@ Modal component.
 
 
 (function() {
-  Bootstrap.ResizeMixin = Ember.Mixin.create({
-    resizing: false,
-    resizeDelay: 200,
-    findResizableParentView: function(parent) {
-      if (Ember.isNone(parent)) {
-        return null;
-      }
-      if (parent && !parent.has('resize')) {
-        return this.findResizableParentView(parent.get('parentView'));
-      }
-      return parent;
-    },
-    _setupResizeHandlers: (function() {
-      var parent, resizeHandler;
-      resizeHandler = this.get('_handleResize');
-      parent = this.findResizableParentView(this.get('parentView'));
-      if (Ember.isNone(parent)) {
-        resizeHandler = Ember.$.proxy(resizeHandler, this);
-        Ember.$(window).on('resize.' + this.elementId, resizeHandler);
-        this._resizeHandler = resizeHandler;
-      } else {
-        parent.on('resize', this, resizeHandler);
-      }
-    }).on('didInsertElement'),
-    _removeResizeHandlers: (function() {
-      if (this._resizeHandler) {
-        Ember.$(window).off('resize.' + this.elementId, this._resizeHandler);
-      }
-    }).on('willDestroyElement'),
-    _handleResize: function(event, promise) {
-      if (Ember.isNone(promise)) {
-        promise = Ember.RSVP.resolve(null, 'Resize handler');
-      }
-      if (!this.get('resizing')) {
-        this.set('resizing', true);
-        if (this.has('resizeStart')) {
-          this.trigger('resizeStart', event);
-        }
-      }
-      if (this.has('resize')) {
-        this.trigger('resize', event, promise);
-      }
-      Ember.run.debounce(this, this._endResize, event, this.get('resizeDelay'));
-    },
-    _endResize: function(event) {
-      this.set('resizing', false);
-      if (this.has('resizeEnd')) {
-        this.trigger('resizeEnd', event);
-      }
-    }
-  });
-
-  Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, Bootstrap.ResizeMixin, {
+  Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, {
     layoutName: 'components/bs-modal',
     classNames: ['modal'],
-    classNameBindings: ['fade', 'isVis:in', 'vertical:vertical'],
+    classNameBindings: ['fade', 'isVis:in', 'vertical:modal-dialog-center'],
     attributeBindings: ['role', 'aria-labelledby', 'isAriaHidden:aria-hidden', "ariaLabelledBy:aria-labelledby"],
     isAriaHidden: (function() {
       return "" + (this.get('isVisible'));
@@ -86,37 +34,6 @@ Modal component.
     fade: true,
     vertical: false,
     zindex: 1000,
-    onResize: (function() {
-      if (this.get('vertical')) {
-        return Ember.run.scheduleOnce('afterRender', this, function() {
-          var contentHeight, footerHeight, headerHeight;
-          contentHeight = void 0;
-          footerHeight = void 0;
-          headerHeight = void 0;
-          contentHeight = Ember.$(window).height() - 60;
-          headerHeight = this.$().find('.modal-header').outerHeight() || 2;
-          footerHeight = this.$().find('.modal-footer').outerHeight() || 2;
-          this.$().find('.modal-content').css({
-            'max-height': function() {
-              return contentHeight;
-            }
-          });
-          this.$().find('.modal-body').css({
-            'max-height': function() {
-              return contentHeight - headerHeight + footerHeight;
-            }
-          });
-          return this.$().find('.modal-dialog').addClass('modal-dialog-center').css({
-            'margin-top': function() {
-              return -(Ember.$(this).outerHeight() / 2);
-            },
-            'margin-left': function() {
-              return -(Ember.$(this).outerWidth() / 2);
-            }
-          });
-        });
-      }
-    }).on('resize'),
     didInsertElement: function() {
       var name;
       this._super();
@@ -127,7 +44,6 @@ Modal component.
         name = this.get('elementId');
       }
       Bootstrap.ModalManager.add(name, this);
-      this.onResize();
       this.dialogStyle();
       if (this.manual) {
         return this.show();
