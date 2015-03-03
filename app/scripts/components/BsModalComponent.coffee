@@ -2,28 +2,51 @@
 Modal component.
 ###
 
-Bootstrap.adjustModalMaxHeightAndPosition = ->
-  Ember.$(".modal.vertical").each ->
-    Ember.$(this).show()  if Ember.$(this).hasClass("in") is false
-    contentHeight = Ember.$(window).height() - 60
-    headerHeight = Ember.$(this).find(".modal-header").outerHeight() or 2
-    footerHeight = Ember.$(this).find(".modal-footer").outerHeight() or 2
-    Ember.$(this).find(".modal-content").css "max-height": ->
-      contentHeight
+Bootstrap.ResizeMixin = Ember.Mixin.create(
+  resizing: false
+  resizeDelay: 200
+  findResizableParentView: (parent) ->
+    if Ember.isNone(parent)
+      return null
+    if parent and !parent.has('resize')
+      return @findResizableParentView(parent.get('parentView'))
+    parent
+  _setupResizeHandlers: (->
+    resizeHandler = @get('_handleResize')
+    parent = @findResizableParentView(@get('parentView'))
+    if Ember.isNone(parent)
+      resizeHandler = Ember.$.proxy(resizeHandler, this)
+      # element doesn't have resizable views, so bind to the window
+      Ember.$(window).on 'resize.' + @elementId, resizeHandler
+      @_resizeHandler = resizeHandler
+    else
+      parent.on 'resize', this, resizeHandler
+    return
+  ).on('didInsertElement')
+  _removeResizeHandlers: (->
+    if @_resizeHandler
+      Ember.$(window).off 'resize.' + @elementId, @_resizeHandler
+    return
+  ).on('willDestroyElement')
+  _handleResize: (event, promise) ->
+    if Ember.isNone(promise)
+      promise = Ember.RSVP.resolve(null, 'Resize handler')
+    if !@get('resizing')
+      @set 'resizing', true
+      if @has('resizeStart')
+        @trigger 'resizeStart', event
+    if @has('resize')
+      @trigger 'resize', event, promise
+    Ember.run.debounce this, @_endResize, event, @get('resizeDelay')
+    return
+  _endResize: (event) ->
+    @set 'resizing', false
+    if @has('resizeEnd')
+      @trigger 'resizeEnd', event
+    return
+)
 
-    Ember.$(this).find(".modal-body").css "max-height": ->
-      contentHeight - (headerHeight + footerHeight)
-
-    Ember.$(this).find(".modal-dialog").addClass("modal-dialog-center").css
-      "margin-top": ->
-        -(Ember.$(this).outerHeight() / 2)
-
-      "margin-left": ->
-        -(Ember.$(this).outerWidth() / 2)
-
-    Ember.$(this).hide()  if Ember.$(this).hasClass("in") is false
-
-Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
+Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, Bootstrap.ResizeMixin,
     layoutName: 'components/bs-modal'
     classNames: ['modal']
     classNameBindings: ['fade', 'isVis:in', 'vertical:vertical']
@@ -31,6 +54,16 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     isAriaHidden: (->
         "#{@get('isVisible')}"
     ).property('isVisible')
+    dialogStyle: (->
+      Ember.run.scheduleOnce 'afterRender', this, ->
+        if @$()
+          return @$().find('.modal-dialog').css('z-index', @get('zindex'))
+      return
+    ).observes('zindex')
+    backdropStyle: (->
+      "z-index: #{@get('zindex') - 2};"
+    ).property('zindex')
+
     modalBackdrop: '<div class="modal-backdrop fade in"></div>'
     role: 'dialog'
     footerViews: []
@@ -44,7 +77,31 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     fullSizeButtons: false
     fade: true
     vertical: false
-    
+    zindex: 1000
+
+    onResize: (->
+      # do what you want when resize is triggered
+      if @get('vertical')
+        return Ember.run.scheduleOnce('afterRender', this, ->
+          contentHeight = undefined
+          footerHeight = undefined
+          headerHeight = undefined
+          contentHeight = Ember.$(window).height() - 60
+          headerHeight = @$().find('.modal-header').outerHeight() or 2
+          footerHeight = @$().find('.modal-footer').outerHeight() or 2
+          @$().find('.modal-content').css 'max-height': ->
+            contentHeight
+          @$().find('.modal-body').css 'max-height': ->
+            contentHeight - headerHeight + footerHeight
+          @$().find('.modal-dialog').addClass('modal-dialog-center').css
+            'margin-top': ->
+              -(Ember.$(this).outerHeight() / 2)
+            'margin-left': ->
+              -(Ember.$(this).outerWidth() / 2)
+        )
+      return
+    ).on 'resize'
+
     didInsertElement: ->
         @._super()
         @setupBinders()
@@ -53,17 +110,18 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
         Ember.assert("Modal name is required for modal view #{@get('elementId')}", @get('name'))
         name?= @get('elementId')
         Bootstrap.ModalManager.add(name, @)
-        Bootstrap.adjustModalMaxHeightAndPosition()
+        @onResize()
+        @dialogStyle()
         if @manual
             @show()
 
     becameVisible: ->
         Em.$('body').addClass('modal-open')
-        @appendBackdrop() if @get("backdrop")
+        #@appendBackdrop() if @get("backdrop")
 
     becameHidden: ->
         Em.$('body').removeClass('modal-open')
-        @_backdrop.remove() if @_backdrop
+        #@_backdrop.remove() if @_backdrop
 
     appendBackdrop: ->
         parentElement = @$().parent()
@@ -81,9 +139,12 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     hide: ->
         @set 'isVis', false
         current = this
-        @$().one 'webkitTransitionEnd', (e) ->
+        if @get('fade')
+          @$().one 'webkitTransitionEnd', (e) ->
             current.set 'isVisible', false
             return
+        else
+          current.set 'isVisible', false
         false
 
     toggle: ->
@@ -103,10 +164,13 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     close: (event) ->
         @set 'isVis', false
         current = this
-        @$().one 'webkitTransitionEnd', (e) ->
+        if @get('fade')
+          @$().one 'webkitTransitionEnd', (e) ->
             if current.get('manual') then current.destroy() else current.hide()
             return
-        @trigger 'closed'
+        else
+          current.hide()
+        @trigger 'closed', this
         
 
     #Invoked automatically by ember when the view is destroyed, giving us a chance to perform cleanups
@@ -140,8 +204,15 @@ Bootstrap.BsModalComponent = Bootstrap.BsModalComponent.reopenClass(
 )
 ###
 
-Bootstrap.ModalManager = Ember.Object.create(
+Bootstrap.ModalManager = Ember.Object.createWithMixins(Ember.Evented,
     add: (name, modalInstance) ->
+        zindex = @get('zindex')
+        @set('zindex', zindex + 2)
+        modalInstance.set('zindex', zindex + 2)
+        modalInstance.on 'closed', (e) ->
+          zindex = e.get('zindex')
+          Bootstrap.ModalManager.set('zindex', zindex - 2) if zindex is Bootstrap.ModalManager.get('zindex')
+          Bootstrap.ModalManager.trigger 'closed', e
         @set name, modalInstance
 
     register: (name, modalInstance) ->
@@ -201,7 +272,7 @@ Bootstrap.ModalManager = Ember.Object.create(
       options = {}  unless options?
       options.fade = @get("fade")  unless options.fade?
       options.fullSizeButtons = @get("fullSizeButtons")  unless options.fullSizeButtons?
-      options.targetObj = controller  unless options.targetObj?
+      options.targetObject = controller  unless options.targetObject?
       options.vertical = @get("vertical")  unless options.vertical?
       cl = controller.container.lookup("component-lookup:main")
       modalComponent = cl.lookupFactory("bs-modal", controller.get("container")).create()
@@ -210,11 +281,9 @@ Bootstrap.ModalManager = Ember.Object.create(
         title: title
         manual: true
         footerButtons: footerButtons
-        targetObject: options.targetObj
-        fade: options.fade
-        fullSizeButtons: options.fullSizeButtons
-        vertical: options.vertical
-      
+		
+      modalComponent.setProperties(options)
+	  
       if Ember.typeOf(view) is "string"
       	template = controller.container.lookup("template:" + view)
       	Ember.assert "Template " + view + " was specified for Modal but template could not be found.", template
@@ -232,11 +301,12 @@ Bootstrap.ModalManager = Ember.Object.create(
     fade: true
     fullSizeButtons: false
     vertical: false
+    zindex: 1000
 )
 
 
 Ember.Application.initializer
     name: 'bs-modal'
     initialize: (container, application) ->
-      Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger "resize"  if Ember.$(window).height() >= 320
+      #Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger "resize"  if Ember.$(window).height() >= 320
       container.register "component:bs-modal", Bootstrap.BsModalComponent

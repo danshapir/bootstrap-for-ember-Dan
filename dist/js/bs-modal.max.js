@@ -4,40 +4,59 @@ Modal component.
 
 
 (function() {
-  Bootstrap.adjustModalMaxHeightAndPosition = function() {
-    return Ember.$(".modal.vertical").each(function() {
-      var contentHeight, footerHeight, headerHeight;
-      if (Ember.$(this).hasClass("in") === false) {
-        Ember.$(this).show();
+  Bootstrap.ResizeMixin = Ember.Mixin.create({
+    resizing: false,
+    resizeDelay: 200,
+    findResizableParentView: function(parent) {
+      if (Ember.isNone(parent)) {
+        return null;
       }
-      contentHeight = Ember.$(window).height() - 60;
-      headerHeight = Ember.$(this).find(".modal-header").outerHeight() || 2;
-      footerHeight = Ember.$(this).find(".modal-footer").outerHeight() || 2;
-      Ember.$(this).find(".modal-content").css({
-        "max-height": function() {
-          return contentHeight;
-        }
-      });
-      Ember.$(this).find(".modal-body").css({
-        "max-height": function() {
-          return contentHeight - (headerHeight + footerHeight);
-        }
-      });
-      Ember.$(this).find(".modal-dialog").addClass("modal-dialog-center").css({
-        "margin-top": function() {
-          return -(Ember.$(this).outerHeight() / 2);
-        },
-        "margin-left": function() {
-          return -(Ember.$(this).outerWidth() / 2);
-        }
-      });
-      if (Ember.$(this).hasClass("in") === false) {
-        return Ember.$(this).hide();
+      if (parent && !parent.has('resize')) {
+        return this.findResizableParentView(parent.get('parentView'));
       }
-    });
-  };
+      return parent;
+    },
+    _setupResizeHandlers: (function() {
+      var parent, resizeHandler;
+      resizeHandler = this.get('_handleResize');
+      parent = this.findResizableParentView(this.get('parentView'));
+      if (Ember.isNone(parent)) {
+        resizeHandler = Ember.$.proxy(resizeHandler, this);
+        Ember.$(window).on('resize.' + this.elementId, resizeHandler);
+        this._resizeHandler = resizeHandler;
+      } else {
+        parent.on('resize', this, resizeHandler);
+      }
+    }).on('didInsertElement'),
+    _removeResizeHandlers: (function() {
+      if (this._resizeHandler) {
+        Ember.$(window).off('resize.' + this.elementId, this._resizeHandler);
+      }
+    }).on('willDestroyElement'),
+    _handleResize: function(event, promise) {
+      if (Ember.isNone(promise)) {
+        promise = Ember.RSVP.resolve(null, 'Resize handler');
+      }
+      if (!this.get('resizing')) {
+        this.set('resizing', true);
+        if (this.has('resizeStart')) {
+          this.trigger('resizeStart', event);
+        }
+      }
+      if (this.has('resize')) {
+        this.trigger('resize', event, promise);
+      }
+      Ember.run.debounce(this, this._endResize, event, this.get('resizeDelay'));
+    },
+    _endResize: function(event) {
+      this.set('resizing', false);
+      if (this.has('resizeEnd')) {
+        this.trigger('resizeEnd', event);
+      }
+    }
+  });
 
-  Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, {
+  Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented, Bootstrap.ResizeMixin, {
     layoutName: 'components/bs-modal',
     classNames: ['modal'],
     classNameBindings: ['fade', 'isVis:in', 'vertical:vertical'],
@@ -45,6 +64,16 @@ Modal component.
     isAriaHidden: (function() {
       return "" + (this.get('isVisible'));
     }).property('isVisible'),
+    dialogStyle: (function() {
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        if (this.$()) {
+          return this.$().find('.modal-dialog').css('z-index', this.get('zindex'));
+        }
+      });
+    }).observes('zindex'),
+    backdropStyle: (function() {
+      return "z-index: " + (this.get('zindex') - 2) + ";";
+    }).property('zindex'),
     modalBackdrop: '<div class="modal-backdrop fade in"></div>',
     role: 'dialog',
     footerViews: [],
@@ -56,6 +85,38 @@ Modal component.
     fullSizeButtons: false,
     fade: true,
     vertical: false,
+    zindex: 1000,
+    onResize: (function() {
+      if (this.get('vertical')) {
+        return Ember.run.scheduleOnce('afterRender', this, function() {
+          var contentHeight, footerHeight, headerHeight;
+          contentHeight = void 0;
+          footerHeight = void 0;
+          headerHeight = void 0;
+          contentHeight = Ember.$(window).height() - 60;
+          headerHeight = this.$().find('.modal-header').outerHeight() || 2;
+          footerHeight = this.$().find('.modal-footer').outerHeight() || 2;
+          this.$().find('.modal-content').css({
+            'max-height': function() {
+              return contentHeight;
+            }
+          });
+          this.$().find('.modal-body').css({
+            'max-height': function() {
+              return contentHeight - headerHeight + footerHeight;
+            }
+          });
+          return this.$().find('.modal-dialog').addClass('modal-dialog-center').css({
+            'margin-top': function() {
+              return -(Ember.$(this).outerHeight() / 2);
+            },
+            'margin-left': function() {
+              return -(Ember.$(this).outerWidth() / 2);
+            }
+          });
+        });
+      }
+    }).on('resize'),
     didInsertElement: function() {
       var name;
       this._super();
@@ -66,22 +127,17 @@ Modal component.
         name = this.get('elementId');
       }
       Bootstrap.ModalManager.add(name, this);
-      Bootstrap.adjustModalMaxHeightAndPosition();
+      this.onResize();
+      this.dialogStyle();
       if (this.manual) {
         return this.show();
       }
     },
     becameVisible: function() {
-      Em.$('body').addClass('modal-open');
-      if (this.get("backdrop")) {
-        return this.appendBackdrop();
-      }
+      return Em.$('body').addClass('modal-open');
     },
     becameHidden: function() {
-      Em.$('body').removeClass('modal-open');
-      if (this._backdrop) {
-        return this._backdrop.remove();
-      }
+      return Em.$('body').removeClass('modal-open');
     },
     appendBackdrop: function() {
       var parentElement;
@@ -100,9 +156,13 @@ Modal component.
       var current;
       this.set('isVis', false);
       current = this;
-      this.$().one('webkitTransitionEnd', function(e) {
+      if (this.get('fade')) {
+        this.$().one('webkitTransitionEnd', function(e) {
+          current.set('isVisible', false);
+        });
+      } else {
         current.set('isVisible', false);
-      });
+      }
       return false;
     },
     toggle: function() {
@@ -125,14 +185,18 @@ Modal component.
       var current;
       this.set('isVis', false);
       current = this;
-      this.$().one('webkitTransitionEnd', function(e) {
-        if (current.get('manual')) {
-          current.destroy();
-        } else {
-          current.hide();
-        }
-      });
-      return this.trigger('closed');
+      if (this.get('fade')) {
+        this.$().one('webkitTransitionEnd', function(e) {
+          if (current.get('manual')) {
+            current.destroy();
+          } else {
+            current.hide();
+          }
+        });
+      } else {
+        current.hide();
+      }
+      return this.trigger('closed', this);
     },
     willDestroyElement: function() {
       var name;
@@ -172,8 +236,19 @@ Modal component.
   */
 
 
-  Bootstrap.ModalManager = Ember.Object.create({
+  Bootstrap.ModalManager = Ember.Object.createWithMixins(Ember.Evented, {
     add: function(name, modalInstance) {
+      var zindex;
+      zindex = this.get('zindex');
+      this.set('zindex', zindex + 2);
+      modalInstance.set('zindex', zindex + 2);
+      modalInstance.on('closed', function(e) {
+        zindex = e.get('zindex');
+        if (zindex === Bootstrap.ModalManager.get('zindex')) {
+          Bootstrap.ModalManager.set('zindex', zindex - 2);
+        }
+        return Bootstrap.ModalManager.trigger('closed', e);
+      });
       return this.set(name, modalInstance);
     },
     register: function(name, modalInstance) {
@@ -288,8 +363,8 @@ Modal component.
       if (options.fullSizeButtons == null) {
         options.fullSizeButtons = this.get("fullSizeButtons");
       }
-      if (options.targetObj == null) {
-        options.targetObj = controller;
+      if (options.targetObject == null) {
+        options.targetObject = controller;
       }
       if (options.vertical == null) {
         options.vertical = this.get("vertical");
@@ -300,12 +375,9 @@ Modal component.
         name: name,
         title: title,
         manual: true,
-        footerButtons: footerButtons,
-        targetObject: options.targetObj,
-        fade: options.fade,
-        fullSizeButtons: options.fullSizeButtons,
-        vertical: options.vertical
+        footerButtons: footerButtons
       });
+      modalComponent.setProperties(options);
       if (Ember.typeOf(view) === "string") {
         template = controller.container.lookup("template:" + view);
         Ember.assert("Template " + view + " was specified for Modal but template could not be found.", template);
@@ -327,15 +399,13 @@ Modal component.
     },
     fade: true,
     fullSizeButtons: false,
-    vertical: false
+    vertical: false,
+    zindex: 1000
   });
 
   Ember.Application.initializer({
     name: 'bs-modal',
     initialize: function(container, application) {
-      if (Ember.$(window).height() >= 320) {
-        Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger("resize");
-      }
       return container.register("component:bs-modal", Bootstrap.BsModalComponent);
     }
   });
@@ -551,62 +621,68 @@ Ember.TEMPLATES["components/bs-modal"] = Ember.HTMLBars.template((function() {
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
-      var el0 = dom.createElement("div");
-      dom.setAttribute(el0,"class","modal-dialog");
-      var el1 = dom.createTextNode("\n    ");
-      dom.appendChild(el0, el1);
+      var el0 = dom.createDocumentFragment();
       var el1 = dom.createElement("div");
-      dom.setAttribute(el1,"class","modal-content");
-      var el2 = dom.createTextNode("\n        ");
+      dom.setAttribute(el1,"class","modal-dialog");
+      var el2 = dom.createTextNode("\n    ");
       dom.appendChild(el1, el2);
       var el2 = dom.createElement("div");
-      dom.setAttribute(el2,"class","modal-header");
-      var el3 = dom.createTextNode("\n            ");
+      dom.setAttribute(el2,"class","modal-content");
+      var el3 = dom.createTextNode("\n        ");
       dom.appendChild(el2, el3);
-      var el3 = dom.createElement("button");
-      dom.setAttribute(el3,"type","button");
-      dom.setAttribute(el3,"data-dismiss","modal");
-      dom.setAttribute(el3,"aria-hidden","true");
-      var el4 = dom.createTextNode("×");
+      var el3 = dom.createElement("div");
+      dom.setAttribute(el3,"class","modal-header");
+      var el4 = dom.createTextNode("\n            ");
       dom.appendChild(el3, el4);
-      dom.appendChild(el2, el3);
-      var el3 = dom.createTextNode("\n            ");
-      dom.appendChild(el2, el3);
-      var el3 = dom.createElement("h4");
-      dom.setAttribute(el3,"class","modal-title");
-      var el4 = dom.createTextNode("\n");
-      dom.appendChild(el3, el4);
-      var el4 = dom.createTextNode("                ");
+      var el4 = dom.createElement("button");
+      dom.setAttribute(el4,"type","button");
+      dom.setAttribute(el4,"data-dismiss","modal");
+      dom.setAttribute(el4,"aria-hidden","true");
+      var el5 = dom.createTextNode("×");
+      dom.appendChild(el4, el5);
       dom.appendChild(el3, el4);
       var el4 = dom.createTextNode("\n            ");
+      dom.appendChild(el3, el4);
+      var el4 = dom.createElement("h4");
+      dom.setAttribute(el4,"class","modal-title");
+      var el5 = dom.createTextNode("\n");
+      dom.appendChild(el4, el5);
+      var el5 = dom.createTextNode("                ");
+      dom.appendChild(el4, el5);
+      var el5 = dom.createTextNode("\n            ");
+      dom.appendChild(el4, el5);
+      dom.appendChild(el3, el4);
+      var el4 = dom.createTextNode("\n        ");
       dom.appendChild(el3, el4);
       dom.appendChild(el2, el3);
       var el3 = dom.createTextNode("\n        ");
       dom.appendChild(el2, el3);
-      dom.appendChild(el1, el2);
-      var el2 = dom.createTextNode("\n        ");
-      dom.appendChild(el1, el2);
-      var el2 = dom.createElement("div");
-      dom.setAttribute(el2,"class","modal-body");
-      var el3 = dom.createTextNode("\n");
+      var el3 = dom.createElement("div");
+      dom.setAttribute(el3,"class","modal-body");
+      var el4 = dom.createTextNode("\n");
+      dom.appendChild(el3, el4);
+      var el4 = dom.createTextNode("        ");
+      dom.appendChild(el3, el4);
       dom.appendChild(el2, el3);
-      var el3 = dom.createTextNode("        ");
+      var el3 = dom.createTextNode("\n        ");
+      dom.appendChild(el2, el3);
+      var el3 = dom.createElement("div");
+      var el4 = dom.createTextNode("\n");
+      dom.appendChild(el3, el4);
+      var el4 = dom.createTextNode("");
+      dom.appendChild(el3, el4);
+      var el4 = dom.createTextNode("        ");
+      dom.appendChild(el3, el4);
+      dom.appendChild(el2, el3);
+      var el3 = dom.createTextNode("\n    ");
       dom.appendChild(el2, el3);
       dom.appendChild(el1, el2);
-      var el2 = dom.createTextNode("\n        ");
-      dom.appendChild(el1, el2);
-      var el2 = dom.createElement("div");
-      var el3 = dom.createTextNode("\n");
-      dom.appendChild(el2, el3);
-      var el3 = dom.createTextNode("");
-      dom.appendChild(el2, el3);
-      var el3 = dom.createTextNode("        ");
-      dom.appendChild(el2, el3);
-      dom.appendChild(el1, el2);
-      var el2 = dom.createTextNode("\n    ");
+      var el2 = dom.createTextNode("\n");
       dom.appendChild(el1, el2);
       dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("\n");
+      var el1 = dom.createTextNode("\n\n");
+      dom.appendChild(el0, el1);
+      var el1 = dom.createElement("div");
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -630,12 +706,13 @@ Ember.TEMPLATES["components/bs-modal"] = Ember.HTMLBars.template((function() {
       } else {
         fragment = this.build(dom);
       }
-      var element1 = dom.childAt(fragment, [1]);
+      var element1 = dom.childAt(fragment, [0, 1]);
       var element2 = dom.childAt(element1, [1]);
       var element3 = dom.childAt(element2, [1]);
       var element4 = dom.childAt(element2, [3]);
       var element5 = dom.childAt(element1, [5]);
       if (this.cachedFragment) { dom.repairClonedNode(element5,[1]); }
+      var element6 = dom.childAt(fragment, [2]);
       var morph0 = dom.createMorphAt(element4,0,1);
       var morph1 = dom.createUnsafeMorphAt(element4,1,2);
       var morph2 = dom.createMorphAt(dom.childAt(element1, [3]),0,1);
@@ -648,6 +725,7 @@ Ember.TEMPLATES["components/bs-modal"] = Ember.HTMLBars.template((function() {
       element(env, element5, context, "bind-attr", [], {"class": ":modal-footer fullSizeButtons:modal-footer-full"});
       block(env, morph3, context, "each", [get(env, context, "footerButtons")], {}, child3, null);
       block(env, morph4, context, "each", [get(env, context, "footerViews")], {}, child4, null);
+      element(env, element6, context, "bind-attr", [], {"style": get(env, context, "backdropStyle"), "class": ":modal-backdrop :fade backdrop:in"});
       return fragment;
     }
   };
