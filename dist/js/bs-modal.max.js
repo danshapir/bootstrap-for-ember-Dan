@@ -34,6 +34,7 @@ Modal component.
     fade: true,
     vertical: false,
     zindex: 1000,
+    keyClose: true,
     didInsertElement: function() {
       var name;
       this._super();
@@ -61,23 +62,25 @@ Modal component.
       return this._backdrop = Em.$(this.modalBackdrop).appendTo(parentElement);
     },
     show: function() {
-      var current;
       this.set('isVisible', true);
-      current = this;
-      setTimeout((function() {
-        current.set('isVis', true);
+      Ember.run.later(this, (function() {
+        this.set('isVis', true);
       }), 15);
     },
     hide: function() {
-      var current;
+      if (this.get('isDestroyed') || this.get('isDestroying')) {
+        return;
+      }
       this.set('isVis', false);
-      current = this;
       if (this.get('fade')) {
-        this.$().one('webkitTransitionEnd', function(e) {
-          current.set('isVisible', false);
-        });
+        Ember.run.later(this, (function() {
+          if (this.get('isDestroyed') || this.get('isDestroying')) {
+            return;
+          }
+          this.set('isVisible', false);
+        }), 300);
       } else {
-        current.set('isVisible', false);
+        this.set('isVisible', false);
       }
       return false;
     },
@@ -93,26 +96,31 @@ Modal component.
       }
     },
     keyPressed: function(event) {
-      if (event.keyCode === 27) {
+      if (event.keyCode === 27 && this.get('keyClose') && this.get('zindex') === Bootstrap.ModalManager.get('zindex')) {
         return this.close(event);
       }
     },
     close: function(event) {
-      var current;
-      this.set('isVis', false);
-      current = this;
-      if (this.get('fade')) {
-        this.$().one('webkitTransitionEnd', function(e) {
-          if (current.get('manual')) {
-            current.destroy();
-          } else {
-            current.hide();
-          }
-        });
-      } else {
-        current.hide();
+      if (this.get('isDestroyed') || this.get('isDestroying')) {
+        return;
       }
-      return this.trigger('closed', this);
+      this.set('isVis', false);
+      if (this.get('fade')) {
+        return Ember.run.later(this, (function() {
+          if (this.get('isDestroyed') || this.get('isDestroying')) {
+            return;
+          }
+          if (this.get('manual')) {
+            this.destroy();
+          } else {
+            this.set('isVisible', false);
+          }
+          this.trigger('closed', this);
+        }), 300);
+      } else {
+        this.set('isVisible', false);
+        return this.trigger('closed', this);
+      }
     },
     willDestroyElement: function() {
       var name;
@@ -490,7 +498,7 @@ Ember.TEMPLATES["components/bs-modal"] = Ember.HTMLBars.template((function() {
           fragment = this.build(dom);
         }
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        inline(env, morph0, context, "bs-button", [], {"content": get(env, context, "this"), "targetObjectBinding": "view.targetObject"});
+        inline(env, morph0, context, "bs-button", [], {"content": get(env, context, "footerButton"), "targetObjectBinding": "view.targetObject"});
         return fragment;
       }
     };
@@ -530,7 +538,7 @@ Ember.TEMPLATES["components/bs-modal"] = Ember.HTMLBars.template((function() {
           fragment = this.build(dom);
         }
         var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-        inline(env, morph0, context, "view", [get(env, context, "this")], {});
+        inline(env, morph0, context, "view", [get(env, context, "footerView")], {});
         return fragment;
       }
     };
@@ -643,9 +651,9 @@ Ember.TEMPLATES["components/bs-modal"] = Ember.HTMLBars.template((function() {
       content(env, morph1, context, "title");
       block(env, morph2, context, "if", [get(env, context, "body")], {}, child1, child2);
       element(env, element5, context, "bind-attr", [], {"class": ":modal-footer fullSizeButtons:modal-footer-full"});
-      block(env, morph3, context, "each", [get(env, context, "footerButtons")], {}, child3, null);
-      block(env, morph4, context, "each", [get(env, context, "footerViews")], {}, child4, null);
-      element(env, element6, context, "bind-attr", [], {"style": get(env, context, "backdropStyle"), "class": ":modal-backdrop :fade backdrop:in"});
+      block(env, morph3, context, "each", [get(env, context, "footerButtons")], {"keyword": "footerButton"}, child3, null);
+      block(env, morph4, context, "each", [get(env, context, "footerViews")], {"keyword": "footerView"}, child4, null);
+      element(env, element6, context, "bind-attr", [], {"style": get(env, context, "backdropStyle"), "class": ":modal-backdrop fade:fade backdrop:in"});
       return fragment;
     }
   };

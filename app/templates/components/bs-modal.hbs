@@ -17,14 +17,14 @@
             {{/if}}
         </div>
         <div {{bind-attr class=":modal-footer fullSizeButtons:modal-footer-full"}}>
-            {{#each footerButtons}}
-                {{bs-button content=this targetObjectBinding="view.targetObject"}}
+            {{#each footerButton in footerButtons}}
+                {{bs-button content=footerButton targetObjectBinding="view.targetObject"}}
             {{/each}}
-            {{#each footerViews}}
-                {{view this}}
+            {{#each footerView in footerViews}}
+                {{view footerView}}
             {{/each}}
         </div>
     </div>
 </div>
 
-<div {{bind-attr style=backdropStyle class=":modal-backdrop :fade backdrop:in" }}></div>
+<div {{bind-attr style=backdropStyle class=":modal-backdrop fade:fade backdrop:in" }}></div>

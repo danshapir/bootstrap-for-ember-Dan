@@ -78,6 +78,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     fade: true
     vertical: false
     zindex: 1000
+    keyClose: true
 #
 #    onResize: (->
 #      # do what you want when resize is triggered
@@ -129,22 +130,25 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
 
     show: ->
         @set 'isVisible', true
-        current = this
-        setTimeout (->
-            current.set 'isVis', true
+        Ember.run.later @, (->
+            @set 'isVis', true
             return
         ), 15
         return
 
     hide: ->
+        if @get('isDestroyed') or @get('isDestroying')
+          return
         @set 'isVis', false
-        current = this
         if @get('fade')
-          @$().one 'webkitTransitionEnd', (e) ->
-            current.set 'isVisible', false
+          Ember.run.later this, (->
+            if @get('isDestroyed') or @get('isDestroying')
+              return
+            @set 'isVisible', false
             return
+          ), 300
         else
-          current.set 'isVisible', false
+          @set 'isVisible', false
         false
 
     toggle: ->
@@ -158,19 +162,24 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
 
     keyPressed: (event) ->
         #Handle ESC
-        if event.keyCode is 27
+        if event.keyCode == 27 and @get('keyClose') and @get('zindex') == Bootstrap.ModalManager.get('zindex')
             @close event
 
     close: (event) ->
+        if @get('isDestroyed') or @get('isDestroying')
+          return
         @set 'isVis', false
-        current = this
         if @get('fade')
-          @$().one 'webkitTransitionEnd', (e) ->
-            if current.get('manual') then current.destroy() else current.hide()
+          Ember.run.later this, (->
+            if @get('isDestroyed') or @get('isDestroying')
+              return
+            if @get('manual') then @destroy() else @set 'isVisible', false
+            @trigger 'closed', this
             return
+          ), 300
         else
-          current.hide()
-        @trigger 'closed', this
+          @set 'isVisible', false
+          @trigger 'closed', this
         
 
     #Invoked automatically by ember when the view is destroyed, giving us a chance to perform cleanups
