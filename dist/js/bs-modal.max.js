@@ -266,7 +266,7 @@ Modal component.
       return this.open(name, title, view, footerButtons, controller, options);
     },
     open: function(name, title, view, footerButtons, controller, options) {
-      var cl, modalComponent, template;
+      var cl, modalComponent, rootElement, template;
       cl = void 0;
       modalComponent = void 0;
       template = void 0;
@@ -311,7 +311,11 @@ Modal component.
           controller: controller
         });
       }
-      return modalComponent.appendTo(controller.namespace.rootElement);
+      rootElement = controller.rootElement;
+      if (typeof controller.rootElement === "undefined") {
+        rootElement = controller.namespace.rootElement;
+      }
+      return modalComponent.appendTo(rootElement);
     },
     fade: true,
     fullSizeButtons: false,

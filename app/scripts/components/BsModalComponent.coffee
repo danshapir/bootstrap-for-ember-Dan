@@ -296,8 +296,9 @@ Bootstrap.ModalManager = Ember.Object.createWithMixins(Ember.Evented,
       	modalComponent.setProperties
       		body: view
       		controller: controller
-      
-      modalComponent.appendTo controller.namespace.rootElement
+      rootElement = controller.rootElement
+      rootElement = controller.namespace.rootElement unless typeof controller.rootElement isnt "undefined"
+      modalComponent.appendTo rootElement
     fade: true
     fullSizeButtons: false
     vertical: false
