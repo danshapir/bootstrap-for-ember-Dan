@@ -49,7 +49,7 @@ Modal component.
 Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     layoutName: 'components/bs-modal'
     classNames: ['modal']
-    classNameBindings: ['fade', 'isVis:in', 'vertical:modal-dialog-center']
+    classNameBindings: ['fade', 'isVis:in', 'vertical:modal-dialog-center', 'class']
     attributeBindings: ['role', 'aria-labelledby', 'isAriaHidden:aria-hidden', "ariaLabelledBy:aria-labelledby"]
     isAriaHidden: (->
         "#{@get('isVisible')}"
@@ -253,7 +253,7 @@ Bootstrap.ModalManager = Ember.Object.createWithMixins(Ember.Evented,
         ]
         @open('confirm-modal', title || 'Confirmation required!', body, buttons, controller, options)
 
-    okModal: (controller, title, message, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null, options) ->
+    okModal: (controller, title, message, options, okButtonTitle = "OK", okButtonEvent = "okModal", okButtonType = null) ->
         body = Ember.View.extend(
             template: Ember.Handlebars.compile(message || "Are you sure you would like to perform this action?")
         )
