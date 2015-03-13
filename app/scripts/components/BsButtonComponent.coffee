@@ -6,7 +6,7 @@ Bootstrap.BsButtonComponent = Ember.Component.extend(Ember._ProxyMixin, Bootstra
   classTypePrefix: 'btn'
   clickedParam: null
   block: null
-  attributeBindings: ['disabled', 'dismiss:data-dismiss', '_type:type', 'style']
+  attributeBindings: ['disabled', 'dismiss:data-dismiss', 'contentDismiss:data-dismiss', '_type:type', 'style']
   _type: 'button'
   bubbles: true
   allowedProperties: ['title', 'type', 'size', 'block', 'disabled', 'clicked', 'dismiss', 'class']
@@ -44,9 +44,7 @@ Bootstrap.BsButtonComponent = Ember.Component.extend(Ember._ProxyMixin, Bootstra
     else
       @getPojoProperties object
 
-
-
-init: ->
+  init: ->
      @_super()
      me = @
      # If content is an object (may happen when a button is the view class of a collectionView), then assign allowed properties to the button component.
@@ -60,7 +58,11 @@ init: ->
 
   blockClass: ( ->
       if @block then "#{@classTypePrefix}-block" else null
-  ).property('block').cacheable()
+  ).property('block')
+
+  contentDismiss: ( ->
+    @get('content.dismiss')
+  ).property('content.dismiss')
 
   click: (evt) ->
       evt.stopPropagation() unless @get('bubbles')

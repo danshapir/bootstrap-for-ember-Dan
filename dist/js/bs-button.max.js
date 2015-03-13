@@ -117,7 +117,7 @@
     classTypePrefix: 'btn',
     clickedParam: null,
     block: null,
-    attributeBindings: ['disabled', 'dismiss:data-dismiss', '_type:type', 'style'],
+    attributeBindings: ['disabled', 'dismiss:data-dismiss', 'contentDismiss:data-dismiss', '_type:type', 'style'],
     _type: 'button',
     bubbles: true,
     allowedProperties: ['title', 'type', 'size', 'block', 'disabled', 'clicked', 'dismiss', 'class'],
@@ -158,8 +158,7 @@
       } else {
         return this.getPojoProperties(object);
       }
-    }
-  }, {
+    },
     init: function() {
       var me, properties;
       this._super();
@@ -179,7 +178,10 @@
       } else {
         return null;
       }
-    }).property('block').cacheable(),
+    }).property('block'),
+    contentDismiss: (function() {
+      return this.get('content.dismiss');
+    }).property('content.dismiss'),
     click: function(evt) {
       if (!this.get('bubbles')) {
         evt.stopPropagation();
