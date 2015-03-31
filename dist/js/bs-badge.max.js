@@ -13,14 +13,13 @@
 Ember.TEMPLATES["components/bs-badge"] = Ember.HTMLBars.template((function() {
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
       var el0 = dom.createDocumentFragment();
-      var el1 = dom.createTextNode("");
-      dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -44,8 +43,9 @@ Ember.TEMPLATES["components/bs-badge"] = Ember.HTMLBars.template((function() {
       } else {
         fragment = this.build(dom);
       }
-      if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,1]); }
-      var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+      var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+      dom.insertBoundary(fragment, null);
+      dom.insertBoundary(fragment, 0);
       content(env, morph0, context, "content");
       return fragment;
     }

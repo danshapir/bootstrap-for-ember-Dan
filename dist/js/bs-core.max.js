@@ -482,12 +482,15 @@ Ember.TEMPLATES["app/templates/views/item-pane"] = Ember.HTMLBars.template((func
   var child0 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createTextNode("  ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -513,7 +516,7 @@ Ember.TEMPLATES["app/templates/views/item-pane"] = Ember.HTMLBars.template((func
         } else {
           fragment = this.build(dom);
         }
-        var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+        var morph0 = dom.createMorphAt(fragment,1,1,contextualElement);
         inline(env, morph0, context, "bsItemPanePartial", [get(env, context, "view.content.template")], {});
         return fragment;
       }
@@ -521,14 +524,13 @@ Ember.TEMPLATES["app/templates/views/item-pane"] = Ember.HTMLBars.template((func
   }());
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
       var el0 = dom.createDocumentFragment();
-      var el1 = dom.createTextNode("");
-      dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -552,8 +554,9 @@ Ember.TEMPLATES["app/templates/views/item-pane"] = Ember.HTMLBars.template((func
       } else {
         fragment = this.build(dom);
       }
-      if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,1]); }
-      var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+      var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+      dom.insertBoundary(fragment, null);
+      dom.insertBoundary(fragment, 0);
       block(env, morph0, context, "if", [get(env, context, "view.content.template")], {}, child0, null);
       return fragment;
     }

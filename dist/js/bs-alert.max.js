@@ -132,6 +132,7 @@ Ember.TEMPLATES["components/bs-alert"] = Ember.HTMLBars.template((function() {
   var child0 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -175,18 +176,17 @@ Ember.TEMPLATES["components/bs-alert"] = Ember.HTMLBars.template((function() {
   }());
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
       var el0 = dom.createDocumentFragment();
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
-      dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -210,10 +210,11 @@ Ember.TEMPLATES["components/bs-alert"] = Ember.HTMLBars.template((function() {
       } else {
         fragment = this.build(dom);
       }
-      if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,1,2,3]); }
-      var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-      var morph1 = dom.createMorphAt(fragment,1,2,contextualElement);
-      var morph2 = dom.createMorphAt(fragment,2,3,contextualElement);
+      var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+      var morph1 = dom.createMorphAt(fragment,1,1,contextualElement);
+      var morph2 = dom.createMorphAt(fragment,2,2,contextualElement);
+      dom.insertBoundary(fragment, null);
+      dom.insertBoundary(fragment, 0);
       block(env, morph0, context, "if", [get(env, context, "dismiss")], {}, child0, null);
       content(env, morph1, context, "message");
       content(env, morph2, context, "yield");

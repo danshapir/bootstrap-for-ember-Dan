@@ -48,12 +48,15 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template((function() 
   var child0 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createTextNode("    ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -79,7 +82,7 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template((function() 
         } else {
           fragment = this.build(dom);
         }
-        var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+        var morph0 = dom.createMorphAt(fragment,1,1,contextualElement);
         inline(env, morph0, context, "bs-progressbar", [], {"progress": get(env, context, "progress"), "type": get(env, context, "type")});
         return fragment;
       }
@@ -88,12 +91,15 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template((function() 
   var child1 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createTextNode("    ");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -119,7 +125,7 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template((function() 
         } else {
           fragment = this.build(dom);
         }
-        var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+        var morph0 = dom.createMorphAt(fragment,1,1,contextualElement);
         content(env, morph0, context, "yield");
         return fragment;
       }
@@ -127,14 +133,13 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template((function() 
   }());
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
       var el0 = dom.createDocumentFragment();
-      var el1 = dom.createTextNode("");
-      dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -158,8 +163,9 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template((function() 
       } else {
         fragment = this.build(dom);
       }
-      if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,1]); }
-      var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+      var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+      dom.insertBoundary(fragment, null);
+      dom.insertBoundary(fragment, 0);
       block(env, morph0, context, "if", [get(env, context, "default")], {}, child0, child1);
       return fragment;
     }
@@ -169,13 +175,18 @@ Ember.TEMPLATES["components/bs-progress"] = Ember.HTMLBars.template((function() 
 Ember.TEMPLATES["components/bs-progressbar"] = Ember.HTMLBars.template((function() {
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
-      var el0 = dom.createElement("span");
-      dom.setAttribute(el0,"class","sr-only");
-      var el1 = dom.createTextNode("% Complete");
+      var el0 = dom.createDocumentFragment();
+      var el1 = dom.createElement("span");
+      dom.setAttribute(el1,"class","sr-only");
+      var el2 = dom.createComment("");
+      dom.appendChild(el1, el2);
+      var el2 = dom.createTextNode("% Complete");
+      dom.appendChild(el1, el2);
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -199,7 +210,7 @@ Ember.TEMPLATES["components/bs-progressbar"] = Ember.HTMLBars.template((function
       } else {
         fragment = this.build(dom);
       }
-      var morph0 = dom.createMorphAt(fragment,-1,0);
+      var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
       content(env, morph0, context, "progress");
       return fragment;
     }

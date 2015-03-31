@@ -61,6 +61,7 @@ Ember.TEMPLATES["components/bs-page-header"] = Ember.HTMLBars.template((function
   var child0 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -69,6 +70,8 @@ Ember.TEMPLATES["components/bs-page-header"] = Ember.HTMLBars.template((function
         var el1 = dom.createTextNode("        ");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("small");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -94,7 +97,7 @@ Ember.TEMPLATES["components/bs-page-header"] = Ember.HTMLBars.template((function
         } else {
           fragment = this.build(dom);
         }
-        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),-1,-1);
+        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
         content(env, morph0, context, "sub");
         return fragment;
       }
@@ -102,14 +105,21 @@ Ember.TEMPLATES["components/bs-page-header"] = Ember.HTMLBars.template((function
   }());
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
-      var el0 = dom.createElement("h1");
-      var el1 = dom.createTextNode("\n    ");
-      dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("\n");
+      var el0 = dom.createDocumentFragment();
+      var el1 = dom.createElement("h1");
+      var el2 = dom.createTextNode("\n    ");
+      dom.appendChild(el1, el2);
+      var el2 = dom.createComment("");
+      dom.appendChild(el1, el2);
+      var el2 = dom.createTextNode("\n");
+      dom.appendChild(el1, el2);
+      var el2 = dom.createComment("");
+      dom.appendChild(el1, el2);
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -133,8 +143,9 @@ Ember.TEMPLATES["components/bs-page-header"] = Ember.HTMLBars.template((function
       } else {
         fragment = this.build(dom);
       }
-      var morph0 = dom.createMorphAt(fragment,0,1);
-      var morph1 = dom.createMorphAt(fragment,1,-1);
+      var element0 = dom.childAt(fragment, [0]);
+      var morph0 = dom.createMorphAt(element0,1,1);
+      var morph1 = dom.createMorphAt(element0,3,3);
       content(env, morph0, context, "title");
       block(env, morph1, context, "if", [get(env, context, "sub")], {}, child0, null);
       return fragment;
@@ -145,14 +156,13 @@ Ember.TEMPLATES["components/bs-page-header"] = Ember.HTMLBars.template((function
 Ember.TEMPLATES["components/bs-well"] = Ember.HTMLBars.template((function() {
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
       var el0 = dom.createDocumentFragment();
-      var el1 = dom.createTextNode("");
-      dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -176,8 +186,9 @@ Ember.TEMPLATES["components/bs-well"] = Ember.HTMLBars.template((function() {
       } else {
         fragment = this.build(dom);
       }
-      if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,1]); }
-      var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+      var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+      dom.insertBoundary(fragment, null);
+      dom.insertBoundary(fragment, 0);
       content(env, morph0, context, "yield");
       return fragment;
     }
@@ -189,6 +200,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
     var child0 = (function() {
       return {
         isHTMLBars: true,
+        revision: "Ember@1.11.0",
         blockParams: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -201,6 +213,8 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
           dom.setAttribute(el1,"data-toggle","collapse");
           dom.setAttribute(el1,"data-parent","#accordion");
           var el2 = dom.createTextNode("\n                ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n            ");
           dom.appendChild(el1, el2);
@@ -230,7 +244,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
             fragment = this.build(dom);
           }
           var element2 = dom.childAt(fragment, [1]);
-          var morph0 = dom.createMorphAt(element2,0,1);
+          var morph0 = dom.createMorphAt(element2,1,1);
           element(env, element2, context, "bind-attr", [], {"href": get(env, context, "collapsibleBodyLink")});
           content(env, morph0, context, "heading");
           return fragment;
@@ -240,12 +254,15 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
     var child1 = (function() {
       return {
         isHTMLBars: true,
+        revision: "Ember@1.11.0",
         blockParams: 0,
         cachedFragment: null,
         hasRendered: false,
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createTextNode("            ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
@@ -271,7 +288,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
           } else {
             fragment = this.build(dom);
           }
-          var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+          var morph0 = dom.createMorphAt(fragment,1,1,contextualElement);
           content(env, morph0, context, "heading");
           return fragment;
         }
@@ -280,6 +297,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
     var child2 = (function() {
       return {
         isHTMLBars: true,
+        revision: "Ember@1.11.0",
         blockParams: 0,
         cachedFragment: null,
         hasRendered: false,
@@ -325,6 +343,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
     }());
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -336,7 +355,9 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
         dom.setAttribute(el1,"class","panel-heading");
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("    ");
         dom.appendChild(el1, el2);
@@ -366,9 +387,8 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
           fragment = this.build(dom);
         }
         var element3 = dom.childAt(fragment, [1]);
-        if (this.cachedFragment) { dom.repairClonedNode(element3,[1]); }
-        var morph0 = dom.createMorphAt(element3,0,1);
-        var morph1 = dom.createMorphAt(element3,1,2);
+        var morph0 = dom.createMorphAt(element3,1,1);
+        var morph1 = dom.createMorphAt(element3,2,2);
         block(env, morph0, context, "if", [get(env, context, "collapsible")], {}, child0, child1);
         block(env, morph1, context, "if", [get(env, context, "dismiss")], {}, child2, null);
         return fragment;
@@ -378,6 +398,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
   var child1 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -390,6 +411,8 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","panel-body");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n    ");
         dom.appendChild(el1, el2);
@@ -419,7 +442,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
           fragment = this.build(dom);
         }
         var element0 = dom.childAt(fragment, [1]);
-        var morph0 = dom.createMorphAt(dom.childAt(element0, [1]),-1,-1);
+        var morph0 = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
         element(env, element0, context, "bind-attr", [], {"id": get(env, context, "collapsibleBodyId")});
         element(env, element0, context, "bind-attr", [], {"class": ":panel-collapse :collapse open:in"});
         content(env, morph0, context, "yield");
@@ -430,6 +453,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
   var child2 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -440,6 +464,8 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"id","collapseOne");
         dom.setAttribute(el1,"class","panel-body");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -465,7 +491,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
         } else {
           fragment = this.build(dom);
         }
-        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),-1,-1);
+        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
         content(env, morph0, context, "yield");
         return fragment;
       }
@@ -474,6 +500,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
   var child3 = (function() {
     return {
       isHTMLBars: true,
+      revision: "Ember@1.11.0",
       blockParams: 0,
       cachedFragment: null,
       hasRendered: false,
@@ -483,6 +510,8 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","panel-footer");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
@@ -508,7 +537,7 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
         } else {
           fragment = this.build(dom);
         }
-        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),-1,-1);
+        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
         content(env, morph0, context, "footer");
         return fragment;
       }
@@ -516,18 +545,21 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
   }());
   return {
     isHTMLBars: true,
+    revision: "Ember@1.11.0",
     blockParams: 0,
     cachedFragment: null,
     hasRendered: false,
     build: function build(dom) {
       var el0 = dom.createDocumentFragment();
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
       var el1 = dom.createTextNode("\n");
       dom.appendChild(el0, el1);
+      var el1 = dom.createComment("");
+      dom.appendChild(el0, el1);
       var el1 = dom.createTextNode("\n");
       dom.appendChild(el0, el1);
-      var el1 = dom.createTextNode("");
+      var el1 = dom.createComment("");
       dom.appendChild(el0, el1);
       return el0;
     },
@@ -551,10 +583,11 @@ Ember.TEMPLATES["components/bs-panel"] = Ember.HTMLBars.template((function() {
       } else {
         fragment = this.build(dom);
       }
-      if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,3]); }
-      var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
-      var morph1 = dom.createMorphAt(fragment,1,2,contextualElement);
-      var morph2 = dom.createMorphAt(fragment,2,3,contextualElement);
+      var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+      var morph1 = dom.createMorphAt(fragment,2,2,contextualElement);
+      var morph2 = dom.createMorphAt(fragment,4,4,contextualElement);
+      dom.insertBoundary(fragment, null);
+      dom.insertBoundary(fragment, 0);
       block(env, morph0, context, "if", [get(env, context, "heading")], {}, child0, null);
       block(env, morph1, context, "if", [get(env, context, "collapsible")], {}, child1, child2);
       block(env, morph2, context, "if", [get(env, context, "footer")], {}, child3, null);
