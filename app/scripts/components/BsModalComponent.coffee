@@ -1,7 +1,7 @@
 ###
 Modal component.
 ###
-
+#
 #Bootstrap.ResizeMixin = Ember.Mixin.create(
 #  resizing: false
 #  resizeDelay: 200
@@ -60,6 +60,14 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
           return @$().find('.modal-dialog').css('z-index', @get('zindex'))
       return
     ).observes('zindex')
+    dialogVerticalStyle: (->
+      if @get('vertical')
+        Ember.run.scheduleOnce 'afterRender', this, ->
+          if @$()
+            marginHeight = @$('.modal-dialog').height() / 2
+            return @$().find('.modal-dialog').css('margin-top', '-' +  marginHeight + 'px');
+      return
+    ).observes('vertical').on('didInsertElement')
     backdropStyle: (->
       "z-index: #{@get('zindex') - 2};"
     ).property('zindex')
@@ -79,7 +87,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
     vertical: false
     zindex: 1000
     keyClose: true
-#
+
 #    onResize: (->
 #      # do what you want when resize is triggered
 #      if @get('vertical')
@@ -318,5 +326,5 @@ Bootstrap.ModalManager = Ember.Object.createWithMixins(Ember.Evented,
 Ember.Application.initializer
     name: 'bs-modal'
     initialize: (container, application) ->
-      #Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger "resize"  if Ember.$(window).height() >= 320
+#      Ember.$(window).resize(Bootstrap.adjustModalMaxHeightAndPosition).trigger "resize"  if Ember.$(window).height() >= 320
       container.register "component:bs-modal", Bootstrap.BsModalComponent

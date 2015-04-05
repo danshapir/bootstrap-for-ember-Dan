@@ -19,6 +19,17 @@ Modal component.
         }
       });
     }).observes('zindex'),
+    dialogVerticalStyle: (function() {
+      if (this.get('vertical')) {
+        Ember.run.scheduleOnce('afterRender', this, function() {
+          var marginHeight;
+          if (this.$()) {
+            marginHeight = this.$('.modal-dialog').height() / 2;
+            return this.$().find('.modal-dialog').css('margin-top', '-' + marginHeight + 'px');
+          }
+        });
+      }
+    }).observes('vertical').on('didInsertElement'),
     backdropStyle: (function() {
       return "z-index: " + (this.get('zindex') - 2) + ";";
     }).property('zindex'),
