@@ -129,7 +129,11 @@ Modal component.
           this.trigger('closed', this);
         }), 300);
       } else {
-        this.set('isVisible', false);
+        if (this.get('manual')) {
+          this.destroy();
+        } else {
+          this.set('isVisible', false);
+        }
         return this.trigger('closed', this);
       }
     },

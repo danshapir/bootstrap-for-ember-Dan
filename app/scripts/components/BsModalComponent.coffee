@@ -186,7 +186,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
             return
           ), 300
         else
-          @set 'isVisible', false
+          if @get('manual') then @destroy() else @set 'isVisible', false
           @trigger 'closed', this
         
 
