@@ -31,7 +31,7 @@ Modal component.
       }
     }).observes('vertical').on('didInsertElement'),
     backdropStyle: (function() {
-      return "z-index: " + (this.get('zindex') - 2) + ";";
+      return ("z-index: " + (this.get('zindex') - 2) + ";").htmlSafe();
     }).property('zindex'),
     modalBackdrop: '<div class="modal-backdrop fade in"></div>',
     role: 'dialog',
