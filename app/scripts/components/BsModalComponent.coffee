@@ -69,7 +69,7 @@ Bootstrap.BsModalComponent = Ember.Component.extend(Ember.Evented,
       return
     ).observes('vertical').on('didInsertElement')
     backdropStyle: (->
-      "z-index: #{@get('zindex') - 2};"
+      ("z-index: #{@get('zindex') - 2};").htmlSafe()
     ).property('zindex')
 
     modalBackdrop: '<div class="modal-backdrop fade in"></div>'
